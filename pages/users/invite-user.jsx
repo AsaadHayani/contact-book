@@ -1,0 +1,122 @@
+import React from "react";
+import Title from "../components/Title";
+import Navbar from "../components/Navbar";
+import FullCard from "../components/FullCard";
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
+import Path from "../components/Path";
+
+const InviteUser = () => {
+  return (
+    <>
+      <Path title="Invite User" path="Home / Users / Invite new user" />
+
+      <FullCard title="User details">
+        <Grid container spacing={2} columns={16} mb="20px">
+          <Grid item xs={8}>
+            <Box mb="10px">
+              <Typography variant="p" color="initial">
+                First name
+                <Typography variant="p" color="error">
+                  {" "}
+                  *
+                </Typography>
+              </Typography>
+            </Box>
+            <TextField id="outlined-basic" label="First name" size="small" />
+          </Grid>
+          <Grid item xs={8}>
+            <Box mb="10px">
+              <Typography variant="p" color="initial">
+                Last name
+                <Typography variant="p" color="error">
+                  {" "}
+                  *
+                </Typography>
+              </Typography>
+            </Box>
+            <TextField id="outlined-basic" label="Last name" size="small" />
+          </Grid>
+        </Grid>
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}
+        >
+          <Grid item xs={2} sm={4} md={4}>
+            <Box mb="10px">
+              <Typography variant="p" color="initial">
+                Email
+                <Typography variant="p" color="error">
+                  {" "}
+                  *
+                </Typography>
+              </Typography>
+            </Box>
+            <TextField
+              id="outlined-basic"
+              label="mail@email.com"
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={2} sm={4} md={4}>
+            <Box mb="10px">
+              <Typography variant="p" color="initial">
+                Phone
+                <Typography variant="p" color="error">
+                  {" "}
+                  *
+                </Typography>
+              </Typography>
+            </Box>
+            <TextField id="outlined-basic" label="Phone Number" size="small" />
+          </Grid>
+          <Grid item xs={2} sm={4} md={4}>
+            <Box mb="10px">
+              <Typography variant="p" color="initial">
+                User Type
+                <Typography variant="p" color="error">
+                  {" "}
+                  *
+                </Typography>
+              </Typography>
+            </Box>
+            <FormControl sx={{ minWidth: 220 }} size="small">
+              <InputLabel id="demo-select-small-label">User Type</InputLabel>
+              <Select
+                labelId="demo-select-small-label"
+                id="demo-select-small"
+                // value={age}
+                label="Aged"
+                // onChange={handleChange}
+              >
+                <MenuItem value="">Ten</MenuItem>
+                <MenuItem value="">Twenty</MenuItem>
+                <MenuItem value="">Thirty</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Box display="flex" columnGap="20px" mt="20px">
+          <Button variant="contained" sx={{ width: "120px" }}>
+            Invite
+          </Button>
+          <Button variant="outlined" sx={{ width: "120px" }}>
+            Cancel
+          </Button>
+        </Box>
+      </FullCard>
+    </>
+  );
+};
+
+export default InviteUser;

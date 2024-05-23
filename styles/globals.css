@@ -1,0 +1,29 @@
+body {
+  margin: 0;
+  background-color: #f5f5f5;
+}
+.path {
+  padding-top: 30px;
+  padding-bottom: 10px;
+}
+.top-table {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 5px;
+  padding-top: 10px;
+}
+.top-table input {
+  background-color: #fff;
+}
+.card-home {
+  color: white;
+}
+.card-home svg {
+  background-color: #eee;
+  border-radius: 50%;
+}
+.card-home path {
+  background-color: grey;
+}
