@@ -8,7 +8,13 @@ import {
 } from "@mui/material";
 import React from "react";
 
-const FullCard = ({ children, title, isSwitch = false, textSwitch = "" }) => {
+const FullCard = ({
+  children,
+  title,
+  isSwitch = false,
+  textSwitch = "",
+  checked,
+}) => {
   return (
     <Container>
       <Paper
@@ -22,10 +28,17 @@ const FullCard = ({ children, title, isSwitch = false, textSwitch = "" }) => {
       >
         <Typography variant="h6">{title}</Typography>
         {isSwitch && (
-          <FormControlLabel control={<Switch />} label={textSwitch} />
+          <FormControlLabel
+            control={<Switch defaultChecked />}
+            defaultChecked
+            label={textSwitch}
+          />
         )}
       </Paper>
-      <Card sx={{ paddingInline: "40px", paddingBlock: "20px" }}>
+      <Card
+        component="form"
+        sx={{ paddingInline: "40px", paddingBlock: "20px" }}
+      >
         {children}
       </Card>
     </Container>

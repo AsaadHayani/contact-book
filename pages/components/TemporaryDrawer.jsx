@@ -1,25 +1,20 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import { IconButton, Toolbar } from "@mui/material";
+import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { AssignmentInd, ExitToApp, PeopleAlt } from "@mui/icons-material";
 import Link from "next/link";
 
 export default function TemporaryDrawer({
   open,
   toggleDrawer,
   pages,
-  settings,
+  handleLogout,
 }) {
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
@@ -30,13 +25,13 @@ export default function TemporaryDrawer({
       <List>
         {pages.map((item, index) => (
           <Link
-            href={item.link}
             key={index}
+            href={`/${item.link}`}
             style={{ textDecoration: "none", color: "unset" }}
           >
             <ListItem disablePadding>
               <ListItemButton>
-                <ListItemIcon>{item.icon}</ListItemIcon>
+                {/* <ListItemIcon>{item.icon}</ListItemIcon> */}
                 <ListItemText primary={item.text} />
               </ListItemButton>
             </ListItem>
@@ -44,31 +39,32 @@ export default function TemporaryDrawer({
           </Link>
         ))}
         <ListItem disablePadding>
-          <ListItemButton sx={{ pl: 4 }}>
+          <ListItemButton>
             <ListItemText primary="Username" />
           </ListItemButton>
         </ListItem>
         <Divider />
-        {settings.map((item, index) => {
-          return (
-            <Link
-              href={item.link}
-              key={index}
-              style={{
-                textDecoration: "none",
-                color: "unset",
-              }}
-            >
-              <ListItem disablePadding>
-                <ListItemButton sx={{ pl: 4 }}>
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.name} />
-                </ListItemButton>
-              </ListItem>
-              <Divider />
-            </Link>
-          );
-        })}
+
+        <Link
+          href={`/profile`}
+          style={{
+            textDecoration: "none",
+            color: "unset",
+          }}
+        >
+          <ListItem disablePadding>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText primary="My Profile" />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+        </Link>
+
+        <ListItem disablePadding>
+          <ListItemButton sx={{ pl: 4 }} onClick={handleLogout}>
+            <ListItemText primary="Logout" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );

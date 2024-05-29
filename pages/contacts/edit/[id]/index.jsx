@@ -1,62 +1,56 @@
 import React, { useState } from "react";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import Image from "next/image";
-import FullCard from "../components/FullCard";
-import Path from "../components/Path";
 import { useRouter } from "next/router";
 import Cookies from "universal-cookie";
-import axiosInstance from "../components/api";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import Path from "@/pages/components/Path";
+import FullCard from "@/pages/components/FullCard";
+import axiosInstance from "@/pages/components/api";
+import { grey } from "@mui/material/colors";
+import Loading from "@/pages/components/Loading";
 
-const Create = () => {
-  const [form, setForm] = useState({
-    firstName: "asaad",
-    lastName: "hayani",
-    email: "asaad99hayani@gmail.com",
-    emailTwo: "",
-    mobileNumber: "123456789",
-    phoneNumber: "12345",
-    address: "address",
-    addressTwo: "address2",
-  });
+const Edit = () => {
+  const router = useRouter();
+  const { id } = router.query;
   const [image, setImage] = useState("");
 
-  const handleFormChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    console.log(form);
+  const cookie = new Cookies();
+  const token = cookie.get("Bearer");
+
+  const fetchContact = async () => {
+    const response = await axiosInstance.get(`contacts/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
   };
+
+  const { data: contact, isLoading, error, isError } = useQuery({
+    queryFn: () => fetchContact(),
+    queryKey: ["contact", id],
+  });
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImage(e.target.files.item(0));
     }
   };
-  const router = useRouter();
-  const cookie = new Cookies();
-  const token = cookie.get("Bearer");
 
-  const createContact = async () => {
-    // const formData = new FormData();
-    // formData.append("firstName", form.firstName);
-    // formData.append("lastName", form.lastName);
-    // formData.append("email", form.email);
-    // formData.append("emailTwo", form.emailTwo);
-    // formData.append("mobileNumber", form.mobileNumber);
-    // formData.append("phoneNumber", form.phoneNumber);
-    // formData.append("address", form.address);
-    // formData.append("addressTwo", form.addressTwo);
-    // formData.append("image", image);
-    const response = await axiosInstance.post(
-      `contacts`,
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({});
+
+  const editContact = async () => {
+    const response = await axiosInstance.put(
+      `contacts/${id}`,
       {
-        // FirstName: form.firstName,
-        // LastName: form.lastName,
-        // Email: form.email,
-        // emailTwo: form.emailTwo,
-        // mobileNumber: form.mobileNumber,
-        // PhoneNumber: form.phoneNumber,
-        // Address: form.address,
-        // addressTwo: form.addressTwo,
+        // firstName: form.firstName,
+        // lastName: form.lastName,
+        // email: form.email,
+        // phoneNumber: form.phoneNumber,
+        // address: form.address,
         FirstName: "asaad",
         LastName: "xv",
         Email: "as555@g.com",
@@ -73,34 +67,41 @@ const Create = () => {
     return response.data;
   };
 
-  const queryClient = useQueryClient();
-  const createContactMutation = useMutation({
-    mutationFn: createContact,
+  const editContactMutation = useMutation({
+    mutationFn: editContact,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["contacts"] });
-      console.log("success");
+      setLoading(true);
     },
   });
 
-  const handleCreate = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(form);
-    createContactMutation.mutate(form);
+    editContactMutation.mutate(form);
   };
+
+  const handleFormChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    console.log(form);
+  };
+
+  if (isError) return alert(`Error: ${error.message}`);
+  if (isLoading) return <Loading open={loading} setOpen={setLoading} />;
+
   return (
     <>
-      <Path title="Contact details" path="Home / Contacts / Create New" />
+      {loading && <Loading open={loading} setOpen={setLoading} />}
+      <Path title="Contact details" path="Home / Contacts / Ricardo" />
 
-      <FullCard title="Contact details">
+      <FullCard title="Contact details" isSwitch={true} textSwitch="Active">
         <Grid
           container
           spacing={{ xs: 2, md: 3 }}
           columns={{ xs: 12, sm: 8, md: 12 }}
           textAlign="center"
         >
-          <Grid item xs={12} md={4}>
+          {/* <Grid item xs={12} md={4}>
             <img
-              src="/images/Placeholder.jpg"
+              src="/images/Person.png"
               width={200}
               height={200}
               style={{ borderRadius: "50%" }}
@@ -121,28 +122,28 @@ const Create = () => {
                 type="file"
                 onChange={handleFileChange}
               />
-              <Button variant="contained" component="span">
+              <Button
+                variant="contained"
+                component="span"
+                sx={{ textTransform: "none" }}
+              >
                 Upload new image
               </Button>
             </label>
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} sm={8} md={4} textAlign="center">
             <Box mb="20px">
               <Box mb="10px" textAlign="start">
                 <Typography variant="body1" color="initial">
                   First name
-                  <Typography variant="span" color="error">
-                    {" *"}
-                  </Typography>
                 </Typography>
               </Box>
               <TextField
                 type="text"
-                value={form.firstName}
-                onChange={handleFormChange}
                 name="firstName"
-                label="First name"
+                defaultValue={contact?.firstName}
+                onChange={handleFormChange}
                 size="small"
                 fullWidth
               />
@@ -151,33 +152,31 @@ const Create = () => {
               <Box mb="10px" textAlign="start">
                 <Typography variant="body1" color="initial">
                   Email
-                  <Typography variant="span" color="error">
-                    {" *"}
-                  </Typography>
                 </Typography>
               </Box>
               <TextField
                 type="email"
-                value={form.email}
-                onChange={handleFormChange}
+                defaultValue={contact?.email}
                 name="email"
-                label="name@example.com"
                 size="small"
                 fullWidth
               />
             </Box>
             <Box mb="20px">
               <Box mb="10px" textAlign="start">
-                <Typography variant="body1" color="initial">
-                  Email 2
+                <Typography variant="span" color="initial">
+                  Email 2{" "}
+                </Typography>
+                <Typography variant="span" color={grey[700]}>
+                  (Optional)
                 </Typography>
               </Box>
               <TextField
                 type="email"
-                value={form.emailTwo}
-                onChange={handleFormChange}
+                defaultValue={
+                  contact?.emailTwo == null ? "- Nothing -" : contact?.emailTwo
+                }
                 name="emailTwo"
-                label="name@example.com"
                 size="small"
                 fullWidth
               />
@@ -186,16 +185,11 @@ const Create = () => {
               <Box mb="10px" textAlign="start">
                 <Typography variant="body1" color="initial">
                   Address
-                  <Typography variant="span" color="error">
-                    {" *"}
-                  </Typography>
                 </Typography>
               </Box>
               <TextField
                 type="text"
-                label="Address"
-                value={form.address}
-                onChange={handleFormChange}
+                defaultValue={contact?.address}
                 name="address"
                 size="small"
                 fullWidth
@@ -204,11 +198,11 @@ const Create = () => {
             <Box columnGap="20px" sx={{ display: { xs: "none", md: "flex" } }}>
               <Button
                 variant="contained"
-                onClick={handleCreate}
                 sx={{ width: "120px" }}
                 type="submit"
+                onClick={handleSubmit}
               >
-                Create
+                Save
               </Button>
               <Button
                 variant="outlined"
@@ -225,18 +219,13 @@ const Create = () => {
               <Box mb="10px" textAlign="start">
                 <Typography variant="body1" color="initial">
                   Last name
-                  <Typography variant="span" color="error">
-                    {" *"}
-                  </Typography>
                 </Typography>
               </Box>
               <TextField
                 type="text"
-                label="Last name"
                 size="small"
                 fullWidth
-                value={form.lastName}
-                onChange={handleFormChange}
+                defaultValue={contact?.lastName}
                 name="lastName"
               />
             </Box>
@@ -244,16 +233,11 @@ const Create = () => {
               <Box mb="10px" textAlign="start">
                 <Typography variant="body1" color="initial">
                   Phone
-                  <Typography variant="span" color="error">
-                    {" *"}
-                  </Typography>
                 </Typography>
               </Box>
               <TextField
                 type="text"
-                label="555-123-4567"
-                value={form.phoneNumber}
-                onChange={handleFormChange}
+                defaultValue={contact?.phoneNumber}
                 name="phoneNumber"
                 size="small"
                 fullWidth
@@ -261,15 +245,21 @@ const Create = () => {
             </Box>
             <Box mb="20px">
               <Box mb="10px" textAlign="start">
-                <Typography variant="body1" color="initial">
-                  Mobile
+                <Typography variant="span" color="initial">
+                  Mobile{" "}
+                </Typography>
+                <Typography variant="span" color={grey[700]}>
+                  (Optional)
                 </Typography>
               </Box>
               <TextField
                 type="text"
                 label="555-123-4567"
-                value={form.mobileNumber}
-                onChange={handleFormChange}
+                defaultValue={
+                  contact?.mobileNumber == null
+                    ? "- Nothing -"
+                    : contact?.mobileNumber
+                }
                 name="mobileNumber"
                 size="small"
                 fullWidth
@@ -277,28 +267,28 @@ const Create = () => {
             </Box>
             <Box mb="20px">
               <Box mb="10px" textAlign="start">
-                <Typography variant="body1" color="initial">
-                  Address 2
+                <Typography variant="span" color="initial">
+                  Address 2{" "}
+                </Typography>
+                <Typography variant="span" color={grey[700]}>
+                  (Optional)
                 </Typography>
               </Box>
               <TextField
                 type="text"
-                label="Address 2"
-                value={form.addressTwo}
-                onChange={handleFormChange}
+                defaultValue={
+                  contact?.addressTwo == null
+                    ? "- Nothing -"
+                    : contact?.addressTwo
+                }
                 name="addressTwo"
                 size="small"
                 fullWidth
               />
             </Box>
-            <Box gap="20px" sx={{ display: { xs: "flex", md: "none" } }}>
-              <Button
-                variant="contained"
-                onClick={handleCreate}
-                sx={{ width: "120px" }}
-                type="submit"
-              >
-                Create
+            {/* <Box gap="20px" sx={{ display: { xs: "flex", md: "none" } }}>
+              <Button variant="contained" sx={{ width: "120px" }} type="submit">
+                Save
               </Button>
               <Button
                 variant="outlined"
@@ -307,7 +297,7 @@ const Create = () => {
               >
                 Back
               </Button>
-            </Box>
+            </Box> */}
           </Grid>
         </Grid>
       </FullCard>
@@ -315,4 +305,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default Edit;

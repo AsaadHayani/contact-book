@@ -1,46 +1,36 @@
 import * as React from "react";
-import {
-  Box,
-  Button,
-  Checkbox,
-  Container,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TableSortLabel,
-} from "@mui/material";
 import PropTypes from "prop-types";
-import Navbar from "../components/Navbar";
-import Title from "../components/Title";
-import TopTableExportEmail from "../components/TopTableExportEmail";
-import Path from "../components/Path";
-import { StarBorder } from "@mui/icons-material";
+import { alpha } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import DeleteIcon from "@mui/icons-material/Delete";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import { visuallyHidden } from "@mui/utils";
 import Image from "next/image";
 
-function createData(
-  id,
-  favorite,
-  firstName,
-  lastName,
-  email,
-  status,
-  phone,
-  action
-) {
+function createData(id, name, calories, fat, carbs, protein) {
   return {
     id,
-    favorite,
-    firstName,
-    lastName,
-    email,
-    status,
-    phone,
-    action,
+    name,
+    calories,
+    fat,
+    carbs,
+    protein,
   };
 }
 
@@ -130,18 +120,6 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: "Phone",
-  },
-  {
-    id: "Status",
-    numeric: true,
-    disablePadding: false,
-    label: "Status",
-  },
-  {
-    id: "Action",
-    numeric: true,
-    disablePadding: false,
-    label: "Action",
   },
 ];
 
@@ -265,11 +243,12 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-const Index = () => {
+const TablePrint = () => {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleRequestSort = (event, property) => {
@@ -315,6 +294,10 @@ const Index = () => {
     setPage(0);
   };
 
+  const handleChangeDense = (event) => {
+    setDense(event.target.checked);
+  };
+
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
   const visibleRows = React.useMemo(
@@ -327,104 +310,57 @@ const Index = () => {
   );
 
   return (
-    <>
-      <Path title="Export Email" path="Home / Contacts / Export Email" />
-
-      <Container>
-        <TopTableExportEmail />
-        <Box sx={{ width: "100%" }}>
-          <Paper sx={{ width: "100%", mb: 2 }}>
-            <TableContainer>
-              <Table sx={{ minWidth: 150 }} aria-labelledby="tableTitle">
-                <EnhancedTableHead
-                  numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
-                  onSelectAllClick={handleSelectAllClick}
-                  onRequestSort={handleRequestSort}
-                  rowCount={rows.length}
-                />
-                <TableBody>
-                  {visibleRows.map((row, index) => {
-                    const isItemSelected = isSelected(row.id);
-                    const labelId = `enhanced-table-checkbox-${index}`;
-
-                    return (
-                      <TableRow
-                        hover
-                        onClick={(event) => handleClick(event, row.id)}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.id}
-                        selected={isItemSelected}
-                        sx={{ cursor: "pointer" }}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            color="primary"
-                            checked={isItemSelected}
-                            inputProps={{
-                              "aria-labelledby": labelId,
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                          align="center"
-                          sx={{ fontWeight: "bold" }}
-                        >
-                          {(index + 1).toString().padStart(3, "0")}
-                        </TableCell>
-                        <TableCell align="center">
-                          <StarBorder />
-                        </TableCell>
-                        <TableCell align="center">
-                          <Image
-                            src="/images/Person.png"
-                            alt="person"
-                            width={50}
-                            height={50}
-                            style={{ borderRadius: "50%" }}
-                          />
-                        </TableCell>
-                        <TableCell align="center">{row.firstName}</TableCell>
-                        <TableCell align="center">{row.lastName}</TableCell>
-                        <TableCell align="center">{row.email}</TableCell>
-                        <TableCell align="center">{row.phone}</TableCell>
-                        <TableCell align="center">{row.status}</TableCell>
-                        <TableCell align="center">
-                          <Button
-                            variant="contained"
-                            onClick={() =>
-                              router.push(`users/details/${row.id}`)
-                            }
-                          >
-                            View
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
-        </Box>
-      </Container>
-    </>
+    <Box sx={{ width: "100%", my: 5 }}>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 100 }} size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              {headCells.map((item) => {
+                return (
+                  <TableCell
+                    key={item.id}
+                    // align="center"
+                    sx={{ bgcolor: "black", textAlign: "left", color: "white" }}
+                  >
+                    {item.label}
+                  </TableCell>
+                );
+              })}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, index) => (
+              <TableRow
+                key={row.name}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell
+                  component="th"
+                  scope="row"
+                  sx={{ fontWeight: "bold" }}
+                >
+                  {(index + 1).toString().padStart(3, "0")}
+                </TableCell>
+                <TableCell align="center">
+                  <Image
+                    src="/images/Person.png"
+                    alt="person"
+                    width={30}
+                    height={30}
+                    style={{ borderRadius: "50%" }}
+                  />
+                </TableCell>
+                <TableCell align="center">{row.calories}</TableCell>
+                <TableCell align="center">{row.fat}</TableCell>
+                <TableCell align="center">{row.carbs}</TableCell>
+                <TableCell align="center">{row.protein}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
 
-export default Index;
+export default TablePrint;

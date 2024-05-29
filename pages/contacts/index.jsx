@@ -27,6 +27,7 @@ import { BorderColor, StarBorder } from "@mui/icons-material";
 import Image from "next/image";
 import axiosInstance from "../components/api";
 import Cookies from "universal-cookie";
+import { useQuery } from "@tanstack/react-query";
 
 function createData(
   id,
@@ -323,31 +324,32 @@ const Index = () => {
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  const [contacts, setContacts] = React.useState([]);
-
   const cookie = new Cookies();
   const token = cookie.get("Bearer");
 
   const fetchContacts = async () => {
-    try {
-      const response = await axiosInstance.get(`contacts`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      });
-      // console.log(response.data);
-      setContacts(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    const response = await axiosInstance.get(`contacts`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
   };
 
-  React.useEffect(() => {
-    fetchContacts();
-  }, []);
+  const { data: contacts, isLoading, error, isError } = useQuery({
+    queryFn: () => fetchContacts(),
+    queryKey: ["contacts"],
+  });
 
   const router = useRouter();
+
+  if (isError) return alert(`Error: ${error.message}`);
+  if (isLoading)
+    return (
+      <Typography variant="h4" textAlign="center" color="error">
+        Loading...
+      </Typography>
+    );
 
   return (
     <>
@@ -358,7 +360,7 @@ const Index = () => {
         <Box sx={{ width: "100%" }}>
           <Paper sx={{ width: "100%", mb: 2 }}>
             <TableContainer>
-              <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+              <Table sx={{ minWidth: 150 }} aria-labelledby="tableTitle">
                 <EnhancedTableHead
                   numSelected={selected.length}
                   order={order}
@@ -377,8 +379,8 @@ const Index = () => {
                   </TableRow>
                 </TableHead> */}
                 <TableBody>
-                  {contacts.length !== 0 ? (
-                    contacts.map((contact, index) => {
+                  {contacts?.length !== 0 ? (
+                    contacts?.map((contact, index) => {
                       const isItemSelected = isSelected(contact.id);
                       const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -415,7 +417,7 @@ const Index = () => {
                             <StarBorder />
                           </TableCell>
                           <TableCell align="center">
-                            <Image
+                            <img
                               src="/images/Person.png"
                               alt="person"
                               width={50}
@@ -430,7 +432,9 @@ const Index = () => {
                             {contact.lastName}
                           </TableCell>
                           <TableCell align="center">{contact.email}</TableCell>
-                          <TableCell align="center">{contact.phone}</TableCell>
+                          <TableCell align="center">
+                            {contact.phoneNumber}
+                          </TableCell>
                           <TableCell align="center">
                             <Alert icon={false} severity="success">
                               {contact.status}
@@ -440,7 +444,7 @@ const Index = () => {
                             <Button
                               variant="contained"
                               onClick={() =>
-                                router.push(`contacts/details/${contact.id}`)
+                                router.push(`contacts/${contact.id}`)
                               }
                             >
                               View
@@ -464,7 +468,7 @@ const Index = () => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={rows.length}
+              count={contacts?.length || 0}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

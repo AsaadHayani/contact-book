@@ -305,31 +305,6 @@ export default function EnhancedTable() {
 
   return (
     <Container>
-      <Box className="top-table">
-        <Box>
-          <TextField
-            id="outlined-basic"
-            bgcolor="white"
-            label="Email"
-            size="small"
-          />
-        </Box>
-        <Box className="top-table">
-          <Box className="top-table">
-            <CheckCircle bgcolor="green" />
-            <Typography variant="body1" color="green">
-              Email sent successfully
-            </Typography>
-          </Box>
-          <TextField
-            bgcolor="green"
-            id="outlined-basic"
-            label="name@example.com"
-            size="small"
-          />
-          <Button variant="contained">Send</Button>
-        </Box>
-      </Box>
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>
           <EnhancedTableToolbar numSelected={selected.length} />

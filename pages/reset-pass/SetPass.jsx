@@ -19,10 +19,7 @@ const SetPass = () => {
   };
 
   return (
-    <Box
-      component="form"
-      sx={{ display: "flex", flexDirection: "column", rowGap: "10px" }}
-    >
+    <>
       <TextField
         label="Password"
         type={showPassword ? "text" : "password"}
@@ -60,7 +57,7 @@ const SetPass = () => {
         size="small"
       />
       <Button variant="contained">Reset Password</Button>
-    </Box>
+    </>
   );
 };
 

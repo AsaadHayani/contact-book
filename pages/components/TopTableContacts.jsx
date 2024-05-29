@@ -24,14 +24,23 @@ const TopTableContacts = () => {
           <Grid item xs={8} sm={8} md={3}>
             <Button
               variant="contained"
-              sx={{ bgcolor: "#DC3545", "&:hover": { bgcolor: "#b52230" } }}
+              sx={{
+                bgcolor: "#DC3545",
+                "&:hover": { bgcolor: "#b52230" },
+                textTransform: "none",
+              }}
               fullWidth
             >
               Delete
             </Button>
           </Grid>
           <Grid item xs={8} sm={8} md={3}>
-            <Button variant="contained" fullWidth>
+            <Button
+              variant="contained"
+              onClick={() => router.push(`/export-email`)}
+              fullWidth
+              sx={{ textTransform: "none" }}
+            >
               Export to
             </Button>
           </Grid>
@@ -40,6 +49,7 @@ const TopTableContacts = () => {
               variant="contained"
               fullWidth
               onClick={() => router.push("/send-email")}
+              sx={{ textTransform: "none" }}
             >
               Send Email
             </Button>
@@ -48,7 +58,11 @@ const TopTableContacts = () => {
             <Button
               variant="contained"
               fullWidth
-              sx={{ bgcolor: "#28A745", "&:hover": { bgcolor: "#208837" } }}
+              sx={{
+                bgcolor: "#28A745",
+                "&:hover": { bgcolor: "#208837" },
+                textTransform: "none",
+              }}
               onClick={() => router.push("/contacts/create")}
             >
               Create New

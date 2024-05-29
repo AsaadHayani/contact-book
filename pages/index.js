@@ -15,7 +15,6 @@ import {
   Close,
   Email,
 } from "@mui/icons-material";
-import Title from "./components/Title";
 import Path from "./components/Path";
 import Link from "next/link";
 import { useTheme } from "@emotion/react";
@@ -66,7 +65,7 @@ const cards = [
 const links = [
   { name: "register", link: "register" },
   { name: "login", link: "login" },
-  { name: "set-pass", link: "set-pass" },
+  { name: "reset-pass", link: "set-pass" },
   { name: "change-pass", link: "change-pass" },
   { name: "users", link: "users" },
   { name: "users/details", link: "users/details" },
@@ -80,6 +79,7 @@ const links = [
   { name: "export-email", link: "export-email" },
   { name: "profile", link: "profile" },
   { name: "send-email", link: "send-email" },
+  { name: "print", link: "print" },
 ];
 
 export default function Home() {
@@ -115,18 +115,16 @@ export default function Home() {
                             spacing={2}
                           >
                             <Grid item xs>
-                              <Typography
-                                color="inherit"
-                                gutterBottom
-                                variant="h5"
-                              >
+                              <Typography color="inherit" variant="h5">
                                 {card.title}
                               </Typography>
-                              <Typography variant="p">{card.desc}</Typography>
+                              <Typography variant="p" sx={{ opacity: 0.5 }}>
+                                {card.desc}
+                              </Typography>
                               <Typography
                                 variant="body2"
                                 mt="10px"
-                                color="text.secondary"
+                                sx={{ opacity: 0.5 }}
                               >
                                 {card.text}
                               </Typography>
@@ -171,10 +169,10 @@ export default function Home() {
                       <TableCell component="th" scope="row">
                         {row.name}
                       </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
+                      <TableCell align="center">{row.calories}</TableCell>
+                      <TableCell align="center">{row.fat}</TableCell>
+                      <TableCell align="center">{row.carbs}</TableCell>
+                      <TableCell align="center">{row.protein}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

@@ -16,17 +16,15 @@ import {
   Typography,
 } from "@mui/material";
 import PropTypes from "prop-types";
-import Navbar from "../components/Navbar";
-import Title from "../components/Title";
 import TopTableUsers from "../components/TopTableUsers";
-import axios from "axios";
-import { Favorite, StarBorderOutlined } from "@mui/icons-material";
 import Path from "../components/Path";
 import { useRouter } from "next/router";
-import { useTheme } from "@emotion/react";
 import axiosInstance from "../components/api";
 import Cookies from "universal-cookie";
 import { Context } from "../components/Context";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import Loading from "../components/Loading";
 
 function createData(
   id,
@@ -283,33 +281,32 @@ const Index = () => {
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  const [users, setUsers] = React.useState([]);
-
   const cookie = new Cookies();
   const token = cookie.get("Bearer");
 
   const fetchUsers = async () => {
-    try {
-      const response = await axiosInstance.get(`users`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      });
-      // console.log(response.data);
-      setUsers(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    const response = await axiosInstance.get(`users`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
   };
 
-  React.useEffect(() => {
-    fetchUsers();
-  }, []);
+  const { data: users, isLoading, error, isError } = useQuery({
+    queryFn: () => fetchUsers(),
+    queryKey: ["users"],
+  });
 
   const router = useRouter();
 
-  const { auth } = React.useContext(Context);
+  if (isError) return alert(`Error: ${error.message}`);
+  if (isLoading)
+    return (
+      <Typography variant="h4" textAlign="center" color="error">
+        Loading...
+      </Typography>
+    );
 
   return (
     <>
@@ -320,7 +317,7 @@ const Index = () => {
         <Box sx={{ width: "100%" }}>
           <Paper sx={{ width: "100%", mb: 2 }}>
             <TableContainer>
-              <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+              <Table sx={{ minWidth: 150 }} aria-labelledby="tableTitle">
                 <EnhancedTableHead
                   numSelected={selected.length}
                   order={order}
@@ -330,8 +327,8 @@ const Index = () => {
                   rowCount={rows.length}
                 />
                 <TableBody>
-                  {users.length !== 0 ? (
-                    users.map((user, index) => {
+                  {users?.length !== 0 ? (
+                    users?.map((user, index) => {
                       const isItemSelected = isSelected(user.id);
                       const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -374,9 +371,7 @@ const Index = () => {
                           <TableCell align="center">
                             <Button
                               variant="contained"
-                              onClick={() =>
-                                router.push(`users/details/${user.id}`)
-                              }
+                              onClick={() => router.push(`/users/${user.id}`)}
                             >
                               View
                             </Button>
@@ -399,13 +394,69 @@ const Index = () => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={users.length}
+              count={users?.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
+          {/* <Pagination count={10} shape="rounded" sx={{ bgcolor: "white" }} />
+          <nav>
+            <List sx={{ display: "flex", alignItems: "center" }}>
+              {items.map(({ page, type, selected, ...item }, index) => {
+                let children = null;
+
+                if (type === "start-ellipsis" || type === "end-ellipsis") {
+                  children = "…";
+                } else if (type === "page") {
+                  children = (
+                    <button
+                      type="button"
+                      style={{
+                        fontWeight: selected ? "bold" : undefined,
+                        backgroundColor: "white",
+                        border: 0,
+                        padding: "7px 10px",
+                        cursor: "pointer",
+                      }}
+                      {...item}
+                    >
+                      {page}
+                    </button>
+                  );
+                } else {
+                  children = (
+                    <button
+                      type="button"
+                      {...item}
+                      style={{
+                        cursor: "pointer",
+                        border: 0,
+                        backgroundColor: "white",
+                        padding: "10px 15px",
+                        fontSize: "17px",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {type}
+                    </button>
+                  );
+                }
+
+                return (
+                  <li
+                    key={index}
+                    style={{
+                      backgroundColor: "white",
+                    }}
+                  >
+                    {children}
+                  </li>
+                );
+              })}
+            </List>
+          </nav> */}
         </Box>
       </Container>
     </>

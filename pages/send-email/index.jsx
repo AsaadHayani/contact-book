@@ -4,11 +4,13 @@ import {
   Button,
   Card,
   Container,
+  Grid,
   InputLabel,
   TextField,
   TextareaAutosize,
 } from "@mui/material";
 import Path from "../components/Path";
+import { grey } from "@mui/material/colors";
 
 const Index = () => {
   return (
@@ -16,62 +18,89 @@ const Index = () => {
       <Path title="Send Email" path="Home / Contacts / Send Email" />
 
       <Container>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            justifyContent: "end",
-            mb: "10px",
-          }}
+        <Grid
+          display="flex"
+          justifyContent={{ xs: "center", sm: "end" }}
+          alignItems="center"
+          gap="10px"
+          mb="10px"
         >
-          <Button variant="contained" sx={{ bgcolor: "#DC3545" }}>
+          <Button
+            variant="contained"
+            sx={{ bgcolor: "#DC3545", width: "120px" }}
+          >
             Discard
           </Button>
-          <Button variant="contained">Send</Button>
-        </Box>
-        <Card sx={{ paddingInline: "40px", paddingBlock: "20px" }}>
-          <Box className="top-table" justifyContent="start">
-            <InputLabel sx={{ fontWeight: "bold" }}>To:</InputLabel>
-            <TextField
-              id="outlined-basic"
-              label="abc@xyz.com"
-              size="small"
-              sx={{ flexGrow: 1 }}
-            />
-          </Box>
-          <Box className="top-table">
-            <Box className="top-table">
-              <InputLabel sx={{ fontWeight: "bold" }}>CC:</InputLabel>
-              <TextField id="outlined-basic" label="abc@xyz.com" size="small" />
-            </Box>
-            <Box className="top-table">
-              <InputLabel sx={{ fontWeight: "bold" }}>TC:</InputLabel>
+          <Button variant="contained" sx={{ width: "120px" }}>
+            Send
+          </Button>
+        </Grid>
+        <Grid
+          container
+          spacing={2}
+          columns={16}
+          sx={{
+            paddingInline: "40px",
+            paddingBlock: "20px",
+            bgcolor: "white",
+            border: 1,
+            borderColor: grey[500],
+            marginBlock: 1,
+          }}
+        >
+          <Grid
+            item
+            xs={16}
+            md={8}
+            spacing={2}
+            display="flex"
+            alignItems="center"
+          >
+            <InputLabel sx={{ fontWeight: "bold", flexGrow: 1 }}>
+              To:
+            </InputLabel>
+            <TextField label="abc@xyz.com" size="small" sx={{ flexGrow: 15 }} />
+          </Grid>
+
+          <Grid item xs={16} md={16} container spacing={2}>
+            <Grid item xs={16} md={8} display="flex" alignItems="center">
+              <InputLabel sx={{ fontWeight: "bold", flexGrow: 1 }}>
+                CC:
+              </InputLabel>
               <TextField
-                id="outlined-basic"
                 label="abc@xyz.com"
                 size="small"
-                sx={{ flexGrow: 2 }}
+                sx={{ flexGrow: 15 }}
               />
-            </Box>
-          </Box>
-          <Box className="top-table" justifyContent="start">
-            <InputLabel sx={{ fontWeight: "bold" }}>Subject:</InputLabel>
-            <TextField
-              id="outlined-basic"
-              label="abc@xyz.com"
-              size="small"
-              sx={{ flexGrow: 1 }}
-            />
-          </Box>
-          <Box className="top-table" justifyContent="start">
+            </Grid>
+            <Grid item xs={16} md={8} display="flex" alignItems="center">
+              <InputLabel sx={{ fontWeight: "bold", flexGrow: 1 }}>
+                TC:
+              </InputLabel>
+              <TextField
+                label="abc@xyz.com"
+                size="small"
+                sx={{ flexGrow: 15 }}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid item xs={16} md={8} display="flex" alignItems="center">
+            <InputLabel sx={{ fontWeight: "bold", flexGrow: 1 }}>
+              Subject:
+            </InputLabel>
+            <TextField label="Subject" size="small" sx={{ flexGrow: 15 }} />
+          </Grid>
+
+          <Grid item xs={16} md={16}>
             <TextareaAutosize
               aria-label="minimum height"
               minRows={10}
+              style={{ width: "100%" }}
               placeholder="Message"
             />
-          </Box>
-        </Card>
+          </Grid>
+        </Grid>
       </Container>
     </>
   );

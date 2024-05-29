@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Checkbox,
+  Container,
   Divider,
   FormControlLabel,
   IconButton,
@@ -10,7 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { grey } from "@mui/material/colors";
+import { grey, red } from "@mui/material/colors";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -18,40 +19,23 @@ import React, { useState } from "react";
 import axiosInstance from "../components/api";
 import Cookies from "universal-cookie";
 import Loading from "../components/Loading";
+import { useMutation } from "@tanstack/react-query";
 
 const FormLogin = () => {
-  const [email, setEmail] = useState("asaad@gmail.com");
-  const [password, setPassword] = useState("12345678");
+  const [form, setForm] = useState({
+    email: "asaad99hayani@gmail.com",
+    password: "12345678",
+  });
+  const [errorEmail, setErrorEmail] = useState(false);
   const router = useRouter();
 
+  const handleFormChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    console.log(form);
+  };
   const cookie = new Cookies();
 
   const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      const response = await axiosInstance.post(
-        `login`,
-        {
-          email,
-          password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const token = response.data.token;
-      cookie.set("Bearer", token, { path: "/" });
-      router.push("/users");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -59,25 +43,62 @@ const FormLogin = () => {
     setShowPassword(!showPassword);
   };
 
+  const login = async () => {
+    const response = await axiosInstance.post(`login`, {
+      email: form.email,
+      password: form.password,
+    });
+    return response.data;
+  };
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onMutate: () => {
+      setLoading(true);
+    },
+    onSuccess: (response) => {
+      const token = response.token;
+      cookie.set("Bearer", token, { path: "/" });
+      router.push("/users");
+      setLoading(false);
+    },
+    onError: (error) => {
+      if (error.response.status === 401) setErrorEmail(true);
+      console.log(error);
+      setLoading(false);
+    },
+    onSettled: () => {
+      setLoading(false);
+    },
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    loginMutation.mutate(form);
+  };
+
   return (
     <>
       {loading && <Loading open={loading} setOpen={setLoading} />}
       <Box
-        component="form"
-        sx={{ display: "flex", flexDirection: "column", rowGap: "10px" }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          rowGap: "10px",
+        }}
       >
         <TextField
           label="Email"
           type="text"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={form.email}
+          onChange={handleFormChange}
           size="small"
         />
         <TextField
           type={showPassword ? "text" : "password"}
           label="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={form.password}
+          name="password"
+          onChange={handleFormChange}
           size="small"
           InputProps={{
             endAdornment: (
@@ -93,6 +114,9 @@ const FormLogin = () => {
             ),
           }}
         />
+        <Typography variant="body1" color="error">
+          {errorEmail && "Wrong Email or Password!"}
+        </Typography>
         <Box
           sx={{
             display: "flex",
@@ -105,20 +129,21 @@ const FormLogin = () => {
         </Box>
       </Box>
 
-      <Button variant="contained" onClick={handleSubmit}>
+      <Button variant="contained" type="submit" onClick={handleSubmit}>
         Sign in
       </Button>
-      <Box sx={{ position: "relative" }}>
+
+      <Box sx={{ position: "relative", width: "100%" }}>
         <Divider
           sx={{
             position: "absolute",
             top: "13px",
             left: "0",
-            width: "30%",
+            width: "25%",
             borderColor: grey[700],
           }}
         />
-        <Typography sx={{ textAlign: "center", zIndex: "1000000px" }}>
+        <Typography sx={{ textAlign: "center" }}>
           Don't have account?
         </Typography>
         <Divider
@@ -126,7 +151,7 @@ const FormLogin = () => {
             position: "absolute",
             top: "13px",
             right: "0",
-            width: "30%",
+            width: "25%",
             borderColor: grey[700],
           }}
         />

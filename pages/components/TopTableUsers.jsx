@@ -8,7 +8,7 @@ const TopTableUsers = () => {
     <Grid container spacing={2} columns={16} mb="10px">
       <Grid item xs={16} sm={16} md={4}>
         <TextField
-          id="outlined-basic"
+          type="search"
           label="Search"
           fullWidth
           sx={{ bgcolor: "white" }}
@@ -24,7 +24,11 @@ const TopTableUsers = () => {
           <Grid item xs={8} sm={8} md={3}>
             <Button
               variant="contained"
-              sx={{ bgcolor: "#DC3545", "&:hover": { bgcolor: "#b52230" } }}
+              sx={{
+                bgcolor: "#DC3545",
+                "&:hover": { bgcolor: "#b52230" },
+                textTransform: "none",
+              }}
               fullWidth
             >
               Delete
@@ -34,9 +38,8 @@ const TopTableUsers = () => {
             <Button
               variant="contained"
               fullWidth
-              onClick={() => {
-                router.push("/users/invite-user");
-              }}
+              onClick={() => router.push("/users/invite-user")}
+              sx={{ textTransform: "none" }}
             >
               Invite New User
             </Button>
