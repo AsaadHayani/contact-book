@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import Cookies from "universal-cookie";
 import axiosInstance from "../components/api";
 import { useQuery } from "@tanstack/react-query";
+import Loading from "../components/Loading";
 
 const Index = () => {
   const router = useRouter();
@@ -32,12 +33,7 @@ const Index = () => {
   });
 
   if (isError) return alert(`Error: ${error.message}`);
-  if (isLoading)
-    return (
-      <Typography variant="h4" textAlign="center" color="error">
-        Loading...
-      </Typography>
-    );
+  if (isLoading) return <Loading open={isLoading} />;
   return (
     <>
       <Path title="Company Profile" path="Home / Company Profile" />
@@ -144,7 +140,15 @@ const Index = () => {
           </Grid>
 
           <Grid item xs={12} md={4} textAlign="center">
-            <img src="/images/Placeholder.jpg" width={200} height={200} />
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25846.642137013932!2d36.61496877645529!3d35.9266543924818!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x152508664354cbdf%3A0xc44836a7b49c636f!2sIdlib%2C%20Syria!5e0!3m2!1sen!2suk!4v1717055728254!5m2!1sen!2suk"
+              width="200"
+              height="200"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
           </Grid>
 
           <Box

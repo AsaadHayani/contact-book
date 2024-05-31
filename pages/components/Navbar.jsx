@@ -1,33 +1,26 @@
 import {
   AppBar,
-  Avatar,
   Box,
   Container,
-  IconButton,
   Menu,
   Toolbar,
   Typography,
   MenuItem,
-  Tooltip,
   Button,
-  Icon,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import Path from "./Path";
 import TemporaryDrawer from "./TemporaryDrawer";
 import {
-  AssignmentInd,
   ContactEmergency,
-  ExitToApp,
   Home,
   LocationCity,
   PeopleAlt,
   Person,
 } from "@mui/icons-material";
 import Cookies from "universal-cookie";
-import { useRouter } from "next/router";
 import axiosInstance from "./api";
+import { useQuery } from "@tanstack/react-query";
 
 const Navbar = () => {
   const [open, setOpen] = React.useState(false);
@@ -57,23 +50,20 @@ const Navbar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  const [username, setUsername] = React.useState([]);
-  const fetchUser = async () => {
-    try {
-      const response = await axiosInstance.get(`users/current-user`, {
-        headers: {
-          Authorization: `Bearer ${cookie.get("Bearer")}`,
-        },
-      });
-      setUsername(`${response.data.firstName} ${response.data.lastName}`);
-    } catch (error) {
-      console.log(error);
-    }
+
+  const fetchCurrentUser = async () => {
+    const response = await axiosInstance.get(`users/current-user`, {
+      headers: {
+        Authorization: `Bearer ${cookie.get("Bearer")}`,
+      },
+    });
+    return response.data;
   };
 
-  React.useEffect(() => {
-    fetchUser();
-  }, []);
+  const { data: currentUser } = useQuery({
+    queryFn: fetchCurrentUser,
+    queryKey: ["currentUser"],
+  });
 
   return (
     <AppBar position="static">
@@ -84,6 +74,7 @@ const Navbar = () => {
               open={open}
               toggleDrawer={toggleDrawer}
               pages={pages}
+              role={currentUser?.role}
               handleLogout={handleLogout}
             />
           </Box>
@@ -117,7 +108,9 @@ const Navbar = () => {
                   textDecoration: "none",
                 }}
               >
-                {page.text}
+                {currentUser?.role === "Owners" && page.text === "Users"
+                  ? null
+                  : page.text}
               </Link>
             ))}
           </Box>
@@ -138,7 +131,9 @@ const Navbar = () => {
                 color="white"
                 textTransform={"capitalize"}
               >
-                {username == "" ? "User not Found" : username}
+                {currentUser?.firstName == undefined
+                  ? "User not Found"
+                  : `${currentUser?.firstName} ${currentUser?.lastName}`}
               </Typography>
             </Button>
             <Menu

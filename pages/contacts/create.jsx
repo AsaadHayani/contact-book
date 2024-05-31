@@ -49,22 +49,18 @@ const Create = () => {
     const response = await axiosInstance.post(
       `contacts`,
       {
-        // FirstName: form.firstName,
-        // LastName: form.lastName,
-        // Email: form.email,
-        // emailTwo: form.emailTwo,
-        // mobileNumber: form.mobileNumber,
-        // PhoneNumber: form.phoneNumber,
-        // Address: form.address,
-        // addressTwo: form.addressTwo,
-        FirstName: "asaad",
-        LastName: "xv",
-        Email: "as555@g.com",
-        PhoneNumber: "123",
-        Address: "xv",
+        FirstName: form.firstName,
+        LastName: form.lastName,
+        Email: form.email,
+        emailTwo: form.emailTwo,
+        mobileNumber: form.mobileNumber,
+        PhoneNumber: form.phoneNumber,
+        Address: form.address,
+        addressTwo: form.addressTwo,
       },
       {
         headers: {
+          "Content-Type": "multipart/form-data",
           Accept: "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
@@ -74,18 +70,18 @@ const Create = () => {
   };
 
   const queryClient = useQueryClient();
-  const createContactMutation = useMutation({
+  const { mutate } = useMutation({
     mutationFn: createContact,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["contacts"] });
-      console.log("success");
+      console.log("create contact successfully");
     },
   });
 
   const handleCreate = (e) => {
     e.preventDefault();
     console.log(form);
-    createContactMutation.mutate(form);
+    mutate(form);
   };
   return (
     <>

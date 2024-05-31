@@ -3,7 +3,7 @@ import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Cookies from "universal-cookie";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Path from "@/pages/components/Path";
 import FullCard from "@/pages/components/FullCard";
 import axiosInstance from "@/pages/components/api";
@@ -46,19 +46,15 @@ const Edit = () => {
     const response = await axiosInstance.put(
       `contacts/${id}`,
       {
-        // firstName: form.firstName,
-        // lastName: form.lastName,
-        // email: form.email,
-        // phoneNumber: form.phoneNumber,
-        // address: form.address,
-        FirstName: "asaad",
-        LastName: "xv",
-        Email: "as555@g.com",
-        PhoneNumber: "123",
-        Address: "xv",
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        phoneNumber: form.phoneNumber,
+        address: form.address,
       },
       {
         headers: {
+          "Content-Type": "multipart/form-data",
           Accept: "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
@@ -67,16 +63,27 @@ const Edit = () => {
     return response.data;
   };
 
-  const editContactMutation = useMutation({
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
     mutationFn: editContact,
-    onSuccess: () => {
+    onMutate: () => {
+      ///////////////////////////////////
       setLoading(true);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["contacts"] });
+      router.back();
+      setLoading(false);
+      console.log("edit contact success");
+    },
+    onError: (error) => {
+      alert("edit contact error:", error);
     },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    editContactMutation.mutate(form);
+    mutate(form);
   };
 
   const handleFormChange = (e) => {
@@ -99,7 +106,7 @@ const Edit = () => {
           columns={{ xs: 12, sm: 8, md: 12 }}
           textAlign="center"
         >
-          {/* <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4}>
             <img
               src="/images/Person.png"
               width={200}
@@ -130,7 +137,7 @@ const Edit = () => {
                 Upload new image
               </Button>
             </label>
-          </Grid> */}
+          </Grid>
 
           <Grid item xs={12} sm={8} md={4} textAlign="center">
             <Box mb="20px">
@@ -286,7 +293,7 @@ const Edit = () => {
                 fullWidth
               />
             </Box>
-            {/* <Box gap="20px" sx={{ display: { xs: "flex", md: "none" } }}>
+            <Box gap="20px" sx={{ display: { xs: "flex", md: "none" } }}>
               <Button variant="contained" sx={{ width: "120px" }} type="submit">
                 Save
               </Button>
@@ -297,7 +304,7 @@ const Edit = () => {
               >
                 Back
               </Button>
-            </Box> */}
+            </Box>
           </Grid>
         </Grid>
       </FullCard>

@@ -337,7 +337,7 @@ const Index = () => {
   };
 
   const { data: contacts, isLoading, error, isError } = useQuery({
-    queryFn: () => fetchContacts(),
+    queryFn: fetchContacts,
     queryKey: ["contacts"],
   });
 

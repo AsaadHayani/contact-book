@@ -11,29 +11,44 @@ import React, { useState } from "react";
 import Cookies from "universal-cookie";
 import axiosInstance from "../components/api";
 import Loading from "../components/Loading";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const ChangePass = () => {
   const [email, setEmail] = useState("asaad99hayani@gmail.com");
   const [errorEmail, setErrorEmail] = useState(false);
 
-  const cookie = new Cookies();
-
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const response = await axiosInstance.post(`forgot-password`, {
-        email,
-      });
-      // router.push("/users");
-    } catch (error) {
+  const createContact = async () => {
+    const response = await axiosInstance.post(
+      `forgot-password`,
+      { email },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  };
+
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: createContact,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["forgot-pass"] });
+      console.log("email send successfully");
+    },
+    onerror: (error) => {
       console.log(error.response.status);
       if (error.response.status === 404) setErrorEmail(true);
-    } finally {
-      setLoading(false);
-    }
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(email);
+    mutate(email);
   };
 
   return (

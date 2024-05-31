@@ -1,9 +1,11 @@
 import * as React from "react";
 import {
+  Alert,
   Box,
   Button,
   Checkbox,
   Container,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -25,6 +27,7 @@ import { Context } from "../components/Context";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Loading from "../components/Loading";
+import { CopyAll } from "@mui/icons-material";
 
 function createData(
   id,
@@ -102,10 +105,10 @@ const headCells = [
     label: "Status",
   },
   {
-    id: "Role",
+    id: "Action",
     numeric: true,
     disablePadding: false,
-    label: "Role",
+    label: "Action",
   },
 ];
 
@@ -301,12 +304,7 @@ const Index = () => {
   const router = useRouter();
 
   if (isError) return alert(`Error: ${error.message}`);
-  if (isLoading)
-    return (
-      <Typography variant="h4" textAlign="center" color="error">
-        Loading...
-      </Typography>
-    );
+  if (isLoading) return <Loading open={isLoading} />;
 
   return (
     <>
@@ -318,14 +316,26 @@ const Index = () => {
           <Paper sx={{ width: "100%", mb: 2 }}>
             <TableContainer>
               <Table sx={{ minWidth: 150 }} aria-labelledby="tableTitle">
-                <EnhancedTableHead
+                {/* <EnhancedTableHead
                   numSelected={selected.length}
                   order={order}
                   orderBy={orderBy}
                   onSelectAllClick={handleSelectAllClick}
                   onRequestSort={handleRequestSort}
                   rowCount={rows.length}
-                />
+                /> */}
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox">
+                      <Checkbox color="primary" />
+                    </TableCell>
+                    {headCells.map((title) => (
+                      <TableCell key={title.id} sx={{ fontWeight: "bold" }}>
+                        {title.label}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
                 <TableBody>
                   {users?.length !== 0 ? (
                     users?.map((user, index) => {
@@ -363,11 +373,35 @@ const Index = () => {
                           </TableCell>
                           <TableCell align="center">{user.firstName}</TableCell>
                           <TableCell align="center">{user.lastName}</TableCell>
-                          <TableCell align="center">{user.email}</TableCell>
+                          <TableCell align="center">
+                            <Box display="flex" gap="10px" alignItems="center">
+                              {user.email}
+                              <IconButton onClick={() => console.log(user.id)}>
+                                <CopyAll />
+                              </IconButton>
+                            </Box>
+                          </TableCell>
                           <TableCell align="center">
                             {user.phoneNumber}
                           </TableCell>
-                          <TableCell align="center">{user.status}</TableCell>
+                          <TableCell align="center">
+                            <Alert
+                              icon={false}
+                              severity={
+                                user.status === "Pending"
+                                  ? "success"
+                                  : user.status === "Active"
+                                  ? "warning"
+                                  : user.status === "Locked"
+                                  ? "info"
+                                  : user.status === "Email sent"
+                                  ? "error"
+                                  : "cyan"
+                              }
+                            >
+                              {user.status}
+                            </Alert>
+                          </TableCell>
                           <TableCell align="center">
                             <Button
                               variant="contained"

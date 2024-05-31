@@ -7,7 +7,7 @@ import Path from "../../components/Path";
 import { useRouter } from "next/router";
 import Cookies from "universal-cookie";
 import axiosInstance from "../../components/api";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
 
 const Details = () => {
@@ -27,9 +27,26 @@ const Details = () => {
   };
 
   const { data: contact, isLoading, error, isError } = useQuery({
-    queryFn: () => fetchContact(),
+    queryFn: fetchContact,
     queryKey: ["contact", id],
   });
+
+  // const handdel = async () => {
+  //   const response = await axiosInstance.delete(`contacts/${id}`);
+  //   return response.data;
+  // };
+  // const queryClient = useQueryClient();
+  // const { mutate } = useMutation({
+  //   mutationFn: handdel,
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ["contacts"] });
+  //     console.log("deleted");
+  //     router.back();
+  //   },
+  // });
+  // const del = () => {
+  //   mutate();
+  // };
 
   if (isError) return alert(`Error: ${error.message}`);
   if (isLoading)
@@ -49,6 +66,8 @@ const Details = () => {
         checked="Active"
         textSwitch="Active"
       >
+        {/* <button onClick={del}>Delete</button> */}
+
         <Grid
           container
           spacing={{ xs: 2, md: 3 }}

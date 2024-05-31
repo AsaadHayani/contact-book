@@ -68,13 +68,9 @@ const links = [
   { name: "reset-pass", link: "set-pass" },
   { name: "change-pass", link: "change-pass" },
   { name: "users", link: "users" },
-  { name: "users/details", link: "users/details" },
-  { name: "users/edit", link: "users/edit" },
   { name: "users/invite-user", link: "users/invite-user" },
   { name: "contacts", link: "contacts" },
-  { name: "contacts/details", link: "contacts/details" },
   { name: "contacts/create", link: "contacts/create" },
-  { name: "contacts/edit", link: "contacts/edit" },
   { name: "activities", link: "activities" },
   { name: "export-email", link: "export-email" },
   { name: "profile", link: "profile" },
@@ -118,7 +114,10 @@ export default function Home() {
                               <Typography color="inherit" variant="h5">
                                 {card.title}
                               </Typography>
-                              <Typography variant="p" sx={{ opacity: 0.5 }}>
+                              <Typography
+                                variant="body1"
+                                sx={{ opacity: 0.5, mb: "10px", mt: "5px" }}
+                              >
                                 {card.desc}
                               </Typography>
                               <Typography

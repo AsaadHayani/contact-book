@@ -15,7 +15,7 @@ import axiosInstance from "@/pages/components/api";
 import FullCard from "@/pages/components/FullCard";
 import Path from "@/pages/components/Path";
 import Loading from "@/pages/components/Loading";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const Edit = () => {
   const router = useRouter();
@@ -37,24 +37,23 @@ const Edit = () => {
     queryFn: fetchContact,
     queryKey: ["user", id],
   });
+  console.log(user);
 
-  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({});
+  const handleFormChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    console.log(form);
+  };
 
   const editUser = async () => {
     const response = await axiosInstance.put(
       `users/${id}`,
       {
-        // firstName: form.firstName,
-        // lastName: form.lastName,
-        // email: form.email,
-        // phoneNumber: form.phoneNumber,
-        // address: form.address,
-        FirstName: "asaad",
-        LastName: "xv",
-        Email: "as555@g.com",
-        PhoneNumber: "123",
-        role: "User",
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        phoneNumber: form.phoneNumber,
+        role: form.role,
       },
       {
         headers: {
@@ -65,21 +64,28 @@ const Edit = () => {
     return response.data;
   };
 
-  const editUserMutation = useMutation({
+  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
     mutationFn: editUser,
-    onSuccess: () => {
+    onMutate: () => {
+      ///////////////////////////////////
       setLoading(true);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["invite-user"] });
+      router.back();
+      setLoading(false);
+      console.log("edit user success");
+    },
+    onError: (error) => {
+      alert("edit user error:", error);
     },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    editUserMutation.mutate(form);
-  };
-
-  const handleFormChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    console.log(form);
+    mutate(form);
   };
 
   if (isError) return alert(`Error: ${error.message}`);
@@ -87,6 +93,7 @@ const Edit = () => {
 
   return (
     <>
+      {loading && <Loading open={loading} setOpen={setLoading} />}
       <Path title="User Edit" path="Home / Users / Edit" />
 
       <FullCard title="User Details" isSwitch={true} textSwitch="Unlocked">
@@ -99,7 +106,10 @@ const Edit = () => {
             </Box>
             <TextField
               type="text"
-              value={user?.firstName}
+              name="firstName"
+              onChange={handleFormChange}
+              required
+              value={user?.firstName || ""}
               size="small"
               fullWidth
             />
@@ -112,7 +122,10 @@ const Edit = () => {
             </Box>
             <TextField
               type="text"
-              value={user?.lastName}
+              name="lastName"
+              onChange={handleFormChange}
+              required
+              value={user?.lastName || ""}
               size="small"
               fullWidth
             />
@@ -128,7 +141,10 @@ const Edit = () => {
             </Box>
             <TextField
               type="email"
-              value={user?.email}
+              name="email"
+              onChange={handleFormChange}
+              required
+              value={user?.email || ""}
               size="small"
               fullWidth
             />
@@ -141,7 +157,10 @@ const Edit = () => {
             </Box>
             <TextField
               type="text"
-              value={user?.phoneNumber}
+              name="phoneNumber"
+              onChange={handleFormChange}
+              required
+              value={user?.phoneNumber || ""}
               size="small"
               fullWidth
             />
@@ -154,13 +173,13 @@ const Edit = () => {
             </Box>
             <FormControl sx={{ minWidth: 220 }} size="small" fullWidth>
               <Select
-                labelId="demo-select-small-label"
-                id="demo-select-small"
-                value={user?.role || ""}
+                onChange={handleFormChange}
+                name="role"
+                value={user?.role || "Owner"}
               >
-                <MenuItem value="Owner">Ten</MenuItem>
-                <MenuItem value="Admin">Twenty</MenuItem>
-                <MenuItem value="Active">Thirty</MenuItem>
+                <MenuItem value="Owner">Owner</MenuItem>
+                <MenuItem value="Admin">Admin</MenuItem>
+                <MenuItem value="User">User</MenuItem>
               </Select>
             </FormControl>
           </Grid>
