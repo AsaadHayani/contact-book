@@ -21,6 +21,7 @@ import axiosInstance from "../components/api";
 import { grey } from "@mui/material/colors";
 import { useMutation } from "@tanstack/react-query";
 import Cookies from "universal-cookie";
+import Error from "../components/Error";
 
 const FormRegister = () => {
   const [form, setForm] = useState({
@@ -40,7 +41,6 @@ const FormRegister = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
 
   const router = useRouter();
@@ -80,13 +80,9 @@ const FormRegister = () => {
     });
     return response.data;
   };
-  const registerMutation = useMutation({
+  const { mutate, isPending, isError, error } = useMutation({
     mutationFn: register,
-    onMutate: () => {
-      setLoading(true);
-    },
     onSuccess: async () => {
-      setLoading(false);
       try {
         const loginResponse = await login();
         const token = await loginResponse.token;
@@ -98,21 +94,36 @@ const FormRegister = () => {
     },
     onError: (error) => {
       if (error.response.status === 403) setErrorEmail(true);
-      console.error("Error registering:", error);
-      setLoading(false);
-    },
-    onSettled: (response) => {
-      setLoading(false);
     },
   });
+  const [errors, setErrors] = React.useState({});
   const handleSubmit = (e) => {
     e.preventDefault();
-    registerMutation.mutate(form);
+    const newErrors = {};
+    if (!form.firstName) newErrors.firstName = "Field required";
+    if (!form.lastName) newErrors.lastName = "Field required";
+    if (!form.email) newErrors.email = "Field required";
+    if (!form.password) newErrors.password = "Field required";
+    if (!form.phoneNumber) newErrors.phoneNumber = "Field required";
+    if (!form.companyName) newErrors.companyName = "Field required";
+    if (!form.state) newErrors.state = "Field required";
+    if (!form.streetOne) newErrors.streetOne = "Field required";
+    if (!form.streetTwo) newErrors.streetTwo = "Field required";
+    if (!form.country) newErrors.country = "Field required";
+    if (!form.city) newErrors.city = "Field required";
+    if (!form.vatNumber) newErrors.vatNumber = "Field required";
+    if (!form.zip) newErrors.zip = "Field required";
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      mutate(form);
+    }
   };
 
   return (
     <>
-      {loading && <Loading />}
+      {isPending && <Loading open={isPending} />}
+      {isError && <Error error={error} />}
       <Typography variant="h5" color={grey[700]}>
         Account details
       </Typography>
@@ -127,6 +138,8 @@ const FormRegister = () => {
             required
             value={form.firstName}
             onChange={handleFormChange}
+            error={!!errors.firstName}
+            helperText={errors.firstName}
           />
         </Grid>
         <Grid item xs={8}>
@@ -138,6 +151,8 @@ const FormRegister = () => {
             fullWidth
             value={form.lastName}
             onChange={handleFormChange}
+            error={!!errors.lastName}
+            helperText={errors.lastName}
           />
         </Grid>
         <Grid item xs={8}>
@@ -158,6 +173,8 @@ const FormRegister = () => {
           <TextField
             label="Password"
             type={showPassword ? "text" : "password"}
+            error={!!errors.password}
+            helperText={errors.password}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -193,6 +210,8 @@ const FormRegister = () => {
             name="companyName"
             value={form.companyName}
             onChange={handleFormChange}
+            error={!!errors.companyName}
+            helperText={errors.companyName}
           />
         </Grid>
         <Grid item xs={8}>
@@ -204,6 +223,8 @@ const FormRegister = () => {
             name="vatNumber"
             value={form.vatNumber}
             onChange={handleFormChange}
+            error={!!errors.vatNumber}
+            helperText={errors.vatNumber}
           />
         </Grid>
         <Grid item xs={8}>
@@ -215,6 +236,8 @@ const FormRegister = () => {
             name="streetOne"
             value={form.streetOne}
             onChange={handleFormChange}
+            error={!!errors.streetOne}
+            helperText={errors.streetOne}
           />
         </Grid>
         <Grid item xs={8}>
@@ -226,6 +249,8 @@ const FormRegister = () => {
             name="streetTwo"
             value={form.streetTwo}
             onChange={handleFormChange}
+            error={!!errors.streetTwo}
+            helperText={errors.streetTwo}
           />
         </Grid>
         <Grid item xs={8}>
@@ -237,6 +262,8 @@ const FormRegister = () => {
             name="city"
             value={form.city}
             onChange={handleFormChange}
+            error={!!errors.city}
+            helperText={errors.city}
           />
         </Grid>
         <Grid item xs={8}>
@@ -248,6 +275,8 @@ const FormRegister = () => {
             name="state"
             value={form.state}
             onChange={handleFormChange}
+            error={!!errors.state}
+            helperText={errors.state}
           />
         </Grid>
         <Grid item xs={8}>
@@ -259,6 +288,8 @@ const FormRegister = () => {
             name="zip"
             value={form.zip}
             onChange={handleFormChange}
+            error={!!errors.zip}
+            helperText={errors.zip}
           />
         </Grid>
         <Grid item xs={8}>

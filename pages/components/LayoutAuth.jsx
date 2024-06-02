@@ -10,13 +10,13 @@ const LayoutAuth = ({ children, title }) => {
         container
         rowSpacing={1}
         columnSpacing={3}
+        columns={16}
         sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       >
         <Grid
           item
-          xs={12}
-          sm={6}
-          md={6}
+          xs={16}
+          sm={9}
           sx={{ display: { xs: "none", sm: "block" }, position: "relative" }}
         >
           <img
@@ -34,7 +34,7 @@ const LayoutAuth = ({ children, title }) => {
           <FooterAuth />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={16} sm={7}>
           <Container>
             <Box
               sx={{

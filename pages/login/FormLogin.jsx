@@ -20,6 +20,7 @@ import axiosInstance from "../components/api";
 import Cookies from "universal-cookie";
 import Loading from "../components/Loading";
 import { useMutation } from "@tanstack/react-query";
+import Error from "../components/Error";
 
 const FormLogin = () => {
   const [form, setForm] = useState({
@@ -35,8 +36,6 @@ const FormLogin = () => {
   };
   const cookie = new Cookies();
 
-  const [loading, setLoading] = useState(false);
-
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => {
@@ -50,41 +49,36 @@ const FormLogin = () => {
     });
     return response.data;
   };
-  const loginMutation = useMutation({
+  const { mutate, isPending, isError, error } = useMutation({
     mutationFn: login,
-    onMutate: () => {
-      setLoading(true);
-    },
     onSuccess: (response) => {
       const token = response.token;
       cookie.set("Bearer", token, { path: "/" });
-      router.push("/users");
-      setLoading(false);
+      router.push("/");
     },
     onError: (error) => {
       if (error.response.status === 401) setErrorEmail(true);
-      console.log(error);
-      setLoading(false);
-    },
-    onSettled: () => {
-      setLoading(false);
     },
   });
+
+  const [errors, setErrors] = React.useState({});
   const handleSubmit = (e) => {
     e.preventDefault();
-    loginMutation.mutate(form);
+    const newErrors = {};
+    if (!form.email) newErrors.email = "Field required";
+    if (!form.password) newErrors.password = "Field required";
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      mutate(form);
+    }
   };
 
   return (
     <>
-      {loading && <Loading open={loading} setOpen={setLoading} />}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          rowGap: "10px",
-        }}
-      >
+      {isPending && <Loading open={isPending} />}
+      {isError && <Error error={error} />}
+      <Box display="flex" flexDirection="column" rowGap="10px">
         <TextField
           label="Email"
           type="text"
@@ -92,6 +86,8 @@ const FormLogin = () => {
           value={form.email}
           onChange={handleFormChange}
           size="small"
+          error={!!errors.email}
+          helperText={errors.email}
         />
         <TextField
           type={showPassword ? "text" : "password"}
@@ -100,6 +96,8 @@ const FormLogin = () => {
           name="password"
           onChange={handleFormChange}
           size="small"
+          error={!!errors.password}
+          helperText={errors.password}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -117,13 +115,7 @@ const FormLogin = () => {
         <Typography variant="body1" color="error">
           {errorEmail && "Wrong Email or Password!"}
         </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <Box display="flex" justifyContent="space-between" alignItems="center">
           <FormControlLabel control={<Checkbox />} label="Remember me" />
           <Link href="/change-pass">Forgot Password</Link>
         </Box>

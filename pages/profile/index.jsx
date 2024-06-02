@@ -11,6 +11,7 @@ import Cookies from "universal-cookie";
 import axiosInstance from "../components/api";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../components/Loading";
+import Error from "../components/Error";
 
 const Index = () => {
   const router = useRouter();
@@ -27,15 +28,15 @@ const Index = () => {
     return response.data;
   };
 
-  const { data: profile, isLoading, error, isError } = useQuery({
+  const { data: profile, isPending, error, isError } = useQuery({
     queryFn: () => fetchProfile(),
     queryKey: ["company"],
   });
-
-  if (isError) return alert(`Error: ${error.message}`);
-  if (isLoading) return <Loading open={isLoading} />;
   return (
     <>
+      {isPending && <Loading open={isPending} />}
+      {isError && <Error error={error} />}
+
       <Path title="Company Profile" path="Home / Company Profile" />
 
       <FullCard title="My Profile">
@@ -90,7 +91,7 @@ const Index = () => {
               variant="outlined"
               sx={{ width: "120px", display: { xs: "none", md: "flex" } }}
               startIcon={<EditOffOutlined sx={{ fontSize: "18px" }} />}
-              onClick={() => router.push(`/profile/${profile?.id}`)}
+              onClick={() => router.push(`/profile/edit`)}
             >
               Edit
             </Button>
@@ -163,7 +164,7 @@ const Index = () => {
               variant="outlined"
               sx={{ width: "120px" }}
               startIcon={<EditOffOutlined sx={{ fontSize: "18px" }} />}
-              onClick={() => router.push(`/profile/${profile?.id}`)}
+              onClick={() => router.push(`/profile/edit`)}
             >
               Edit
             </Button>

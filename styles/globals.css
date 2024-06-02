@@ -17,17 +17,6 @@ body {
 .top-table input {
   background-color: #fff;
 }
-.card-home {
-  color: white;
-}
-.card-home svg {
-  background-color: #eee;
-  border-radius: 50%;
-  opacity: 50%;
-}
-.card-home path {
-  background-color: grey;
-}
 table thead th {
   font-weight: bold !important;
   border-bottom: 2px solid #676767 !important;

@@ -7,6 +7,8 @@ import { useRouter } from "next/router";
 import Cookies from "universal-cookie";
 import axiosInstance from "../components/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Loading from "../components/Loading";
+import Error from "../components/Error";
 
 const Create = () => {
   const [form, setForm] = useState({
@@ -70,7 +72,7 @@ const Create = () => {
   };
 
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
+  const { mutate, isPending, isError, error } = useMutation({
     mutationFn: createContact,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["contacts"] });
@@ -78,13 +80,28 @@ const Create = () => {
     },
   });
 
+  const [errors, setErrors] = React.useState({});
   const handleCreate = (e) => {
     e.preventDefault();
-    console.log(form);
-    mutate(form);
+    const newErrors = {};
+    if (!form.firstName) newErrors.firstName = "Field required";
+    if (!form.lastName) newErrors.lastName = "Field required";
+    if (!form.email) newErrors.email = "Field required";
+    if (!form.emailTwo) newErrors.emailTwo = "Field required";
+    if (!form.phoneNumber) newErrors.phoneNumber = "Field required";
+    if (!form.address) newErrors.address = "Field required";
+    if (!form.addressTwo) newErrors.addressTwo = "Field required";
+    if (!form.mobileNumber) newErrors.mobileNumber = "Field required";
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      mutate(form);
+    }
   };
   return (
     <>
+      {isPending && <Loading open={isPending} />}
+      {isError && <Error error={error} />}
       <Path title="Contact details" path="Home / Contacts / Create New" />
 
       <FullCard title="Contact details">
@@ -140,6 +157,8 @@ const Create = () => {
                 name="firstName"
                 label="First name"
                 size="small"
+                error={!!errors.firstName}
+                helperText={errors.firstName}
                 fullWidth
               />
             </Box>
@@ -159,6 +178,8 @@ const Create = () => {
                 name="email"
                 label="name@example.com"
                 size="small"
+                error={!!errors.email}
+                helperText={errors.email}
                 fullWidth
               />
             </Box>
@@ -175,6 +196,8 @@ const Create = () => {
                 name="emailTwo"
                 label="name@example.com"
                 size="small"
+                error={!!errors.emailTwo}
+                helperText={errors.emailTwo}
                 fullWidth
               />
             </Box>
@@ -194,6 +217,8 @@ const Create = () => {
                 onChange={handleFormChange}
                 name="address"
                 size="small"
+                error={!!errors.address}
+                helperText={errors.address}
                 fullWidth
               />
             </Box>
@@ -234,6 +259,8 @@ const Create = () => {
                 value={form.lastName}
                 onChange={handleFormChange}
                 name="lastName"
+                error={!!errors.lastName}
+                helperText={errors.lastName}
               />
             </Box>
             <Box mb="20px">
@@ -252,6 +279,8 @@ const Create = () => {
                 onChange={handleFormChange}
                 name="phoneNumber"
                 size="small"
+                error={!!errors.phoneNumber}
+                helperText={errors.phoneNumber}
                 fullWidth
               />
             </Box>
@@ -268,6 +297,8 @@ const Create = () => {
                 onChange={handleFormChange}
                 name="mobileNumber"
                 size="small"
+                error={!!errors.mobileNumber}
+                helperText={errors.mobileNumber}
                 fullWidth
               />
             </Box>
@@ -284,6 +315,8 @@ const Create = () => {
                 onChange={handleFormChange}
                 name="addressTwo"
                 size="small"
+                error={!!errors.addressTwo}
+                helperText={errors.addressTwo}
                 fullWidth
               />
             </Box>

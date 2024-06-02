@@ -1,14 +1,22 @@
 import React from "react";
 import FullCard from "../../components/FullCard";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControlLabel,
+  Grid,
+  Switch,
+  Typography,
+} from "@mui/material";
 import Image from "next/image";
 import { EditOffOutlined } from "@mui/icons-material";
 import Path from "../../components/Path";
 import { useRouter } from "next/router";
 import Cookies from "universal-cookie";
 import axiosInstance from "../../components/api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
+import Error from "@/pages/components/Error";
 
 const Details = () => {
   const router = useRouter();
@@ -26,10 +34,19 @@ const Details = () => {
     return response.data;
   };
 
-  const { data: contact, isLoading, error, isError } = useQuery({
+  const { data: contact, isPending, error, isError } = useQuery({
     queryFn: fetchContact,
     queryKey: ["contact", id],
   });
+
+  const switchElement = (checked) => {
+    return (
+      <FormControlLabel
+        control={<Switch checked={checked === "Active" ? true : false} />}
+        label={checked === "Active" ? "Active" : "Inactive"}
+      />
+    );
+  };
 
   // const handdel = async () => {
   //   const response = await axiosInstance.delete(`contacts/${id}`);
@@ -48,23 +65,15 @@ const Details = () => {
   //   mutate();
   // };
 
-  if (isError) return alert(`Error: ${error.message}`);
-  if (isLoading)
-    return (
-      <Typography variant="h4" textAlign="center" color="error">
-        Loading...
-      </Typography>
-    );
-
   return (
     <>
+      {isPending && <Loading open={isPending} />}
+      {isError && <Error error={error} />}
       <Path title="Contact details" path="Home / Contacts / Ricardo" />
 
       <FullCard
         title="Contact details"
-        isSwitch={true}
-        checked="Active"
-        textSwitch="Active"
+        element={switchElement(contact?.status)}
       >
         {/* <button onClick={del}>Delete</button> */}
 
@@ -136,7 +145,7 @@ const Details = () => {
             <Box columnGap="20px" sx={{ display: { xs: "none", md: "flex" } }}>
               <Button
                 variant="outlined"
-                sx={{ width: "120px" }}
+                sx={{ width: "120px", textTransform: "none" }}
                 startIcon={<EditOffOutlined />}
                 onClick={() => router.push(`/contacts/edit/${contact?.id}`)}
               >
@@ -144,7 +153,7 @@ const Details = () => {
               </Button>
               <Button
                 variant="outlined"
-                sx={{ width: "120px" }}
+                sx={{ width: "120px", textTransform: "none" }}
                 onClick={() => router.back()}
               >
                 Back
@@ -200,7 +209,7 @@ const Details = () => {
             <Box columnGap="20px" sx={{ display: { xs: "flex", md: "none" } }}>
               <Button
                 variant="outlined"
-                sx={{ width: "120px" }}
+                sx={{ width: "120px", textTransform: "none" }}
                 startIcon={<EditOffOutlined />}
                 onClick={() => router.push(`/contacts/edit/${contact?.id}`)}
               >
@@ -208,7 +217,7 @@ const Details = () => {
               </Button>
               <Button
                 variant="outlined"
-                sx={{ width: "120px" }}
+                sx={{ width: "120px", textTransform: "none" }}
                 onClick={() => router.back()}
               >
                 Back

@@ -115,6 +115,7 @@ export default function Activities() {
                             variant="span"
                             color="initial"
                             bgcolor="#eee"
+                            fontWeight="bold"
                             padding="10px 20px"
                           >
                             {log.by}

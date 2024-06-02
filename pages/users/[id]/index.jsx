@@ -1,6 +1,13 @@
 import React from "react";
 import FullCard from "../../components/FullCard";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControlLabel,
+  Grid,
+  Switch,
+  Typography,
+} from "@mui/material";
 import { EditOffOutlined } from "@mui/icons-material";
 import Path from "../../components/Path";
 import { useRouter } from "next/router";
@@ -8,6 +15,7 @@ import axiosInstance from "@/pages/components/api";
 import Cookies from "universal-cookie";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "@/pages/components/Loading";
+import Error from "@/pages/components/Error";
 
 const DetailsUser = () => {
   const router = useRouter();
@@ -25,24 +33,28 @@ const DetailsUser = () => {
     return response.data;
   };
 
-  const { data: user, isLoading, error, isError } = useQuery({
-    queryFn: () => fetchUser(),
+  const { data: user, isPending, error, isError } = useQuery({
+    queryFn: fetchUser,
     queryKey: ["user", id],
   });
 
-  if (isError) return alert(`Error: ${error.message}`);
-  if (isLoading)
+  const switchElement = (checked) => {
     return (
-      <Typography variant="h4" textAlign="center" color="error">
-        Loading...
-      </Typography>
+      <FormControlLabel
+        control={<Switch checked={checked === "Admin" ? true : false} />}
+        label={checked === "Admin" ? "Locked" : "Unlocked"}
+      />
     );
+  };
 
   return (
     <>
+      {isPending && <Loading open={isPending} />}
+      {isError && <Error error={error} />}
+
       <Path title="User Details" path="Home / Users / Details" />
 
-      <FullCard title="User Details" isSwitch={true} textSwitch="Unlocked">
+      <FullCard title="User Details" element={switchElement(user?.role)}>
         <Grid container spacing={2} columns={16} mb="20px">
           <Grid item xs={16} md={8}>
             <Box mb="10px">
@@ -65,7 +77,6 @@ const DetailsUser = () => {
             </Typography>
           </Grid>
         </Grid>
-
         <Grid container spacing={2} columns={16}>
           <Grid item xs={16} md={5.3}>
             <Box mb="10px">
@@ -98,11 +109,10 @@ const DetailsUser = () => {
             </Typography>
           </Grid>
         </Grid>
-
         <Box display="flex" columnGap="20px" mt="20px">
           <Button
             variant="outlined"
-            sx={{ width: "120px" }}
+            sx={{ width: "120px", textTransform: "none" }}
             startIcon={<EditOffOutlined sx={{ fontSize: "18px" }} />}
             onClick={() => router.push(`/users/edit/${user?.id}`)}
           >
@@ -110,7 +120,7 @@ const DetailsUser = () => {
           </Button>
           <Button
             variant="outlined"
-            sx={{ width: "120px" }}
+            sx={{ width: "120px", textTransform: "none" }}
             onClick={() => router.back()}
           >
             Back

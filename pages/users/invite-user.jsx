@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Title from "../components/Title";
-import Navbar from "../components/Navbar";
 import FullCard from "../components/FullCard";
 import {
   Box,
@@ -19,6 +17,7 @@ import Cookies from "universal-cookie";
 import { useRouter } from "next/router";
 import axiosInstance from "../components/api";
 import Loading from "../components/Loading";
+import Error from "../components/Error";
 
 const InviteUser = () => {
   const [form, setForm] = useState({
@@ -56,32 +55,36 @@ const InviteUser = () => {
     return response.data;
   };
 
-  const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
+  const { mutate, isPending, isError, error } = useMutation({
     mutationFn: createInviteUser,
-    onMutate: () => {
-      setLoading(true);
-    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["invite-user"] });
-      router.push(`/users`);
-      setLoading(false);
       console.log("invite user success");
-    },
-    onError: (error) => {
-      alert("invite user error:", error);
+      router.push(`/users`);
     },
   });
 
+  const [errors, setErrors] = React.useState({});
   const handleCreate = (e) => {
     e.preventDefault();
-    mutate(form);
+    const newErrors = {};
+    if (!form.firstName) newErrors.firstName = "Field required";
+    if (!form.lastName) newErrors.lastName = "Field required";
+    if (!form.email) newErrors.email = "Field required";
+    if (!form.phoneNumber) newErrors.phoneNumber = "Field required";
+    if (!form.role) newErrors.role = "Field required";
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      mutate(form);
+    }
   };
 
   return (
     <>
-      {loading && <Loading open={loading} setOpen={setLoading} />}
+      {isPending && <Loading open={isPending} />}
+      {isError && <Error error={error} />}
       <Path title="Invite User" path="Home / Users / Invite new user" />
 
       <FullCard title="User details">
@@ -103,6 +106,8 @@ const InviteUser = () => {
               onChange={handleFormChange}
               label="First name"
               size="small"
+              error={!!errors.firstName}
+              helperText={errors.firstName}
               fullWidth
             />
           </Grid>
@@ -123,6 +128,8 @@ const InviteUser = () => {
               onChange={handleFormChange}
               label="Last name"
               size="small"
+              error={!!errors.lastName}
+              helperText={errors.lastName}
               fullWidth
             />
           </Grid>
@@ -146,6 +153,8 @@ const InviteUser = () => {
               onChange={handleFormChange}
               label="mail@email.com"
               size="small"
+              error={!!errors.email}
+              helperText={errors.email}
               fullWidth
             />
           </Grid>
@@ -166,6 +175,8 @@ const InviteUser = () => {
               onChange={handleFormChange}
               label="Phone Number"
               size="small"
+              error={!!errors.phoneNumber}
+              helperText={errors.phoneNumber}
               fullWidth
             />
           </Grid>
@@ -185,6 +196,8 @@ const InviteUser = () => {
                 onChange={handleFormChange}
                 value={form.role}
                 label="User Type"
+                error={!!errors.role}
+                helperText={errors.role}
               >
                 <MenuItem value="User">User</MenuItem>
                 <MenuItem value="Admin">Admin</MenuItem>
@@ -196,13 +209,17 @@ const InviteUser = () => {
         <Box display="flex" columnGap="20px" mt="20px">
           <Button
             variant="contained"
-            sx={{ width: "120px" }}
+            sx={{ width: "120px", textTransform: "none" }}
             onClick={handleCreate}
             type="submit"
           >
             Invite
           </Button>
-          <Button variant="outlined" sx={{ width: "120px" }}>
+          <Button
+            variant="outlined"
+            sx={{ width: "120px", textTransform: "none" }}
+            onClick={() => router.back()}
+          >
             Cancel
           </Button>
         </Box>

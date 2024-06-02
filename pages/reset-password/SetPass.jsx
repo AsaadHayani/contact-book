@@ -3,6 +3,8 @@ import { Button, IconButton, InputAdornment, TextField } from "@mui/material";
 import React, { useState } from "react";
 import axiosInstance from "../components/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Loading from "../components/Loading";
+import Error from "../components/Error";
 
 const SetPass = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,20 +18,25 @@ const SetPass = () => {
     return response.data;
   };
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
+  const { mutate, isPending, isError, error } = useMutation({
     mutationFn: handleSetPassword,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["set-password"] });
       console.log("email send successfully");
     },
-    onError: (error) => {
-      console.log(error);
-    },
   });
 
+  const [errors, setErrors] = React.useState({});
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate(password);
+    const newErrors = {};
+    if (!password) newErrors.password = "Field required";
+    if (!cPass) newErrors.cPass = "Field required";
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      mutate(password);
+    }
   };
 
   const handleClickShowPassword = () => {
@@ -38,12 +45,15 @@ const SetPass = () => {
 
   return (
     <>
+      {isPending && <Loading open={isPending} />}
+      {isError && <Error error={error} />}
       <TextField
         label="Password"
         type={showPassword ? "text" : "password"}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         name="password"
+        helperText={errors.password}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -66,6 +76,8 @@ const SetPass = () => {
         value={cPass}
         onChange={(e) => setCPass(e.target.value)}
         name="cpassword"
+        error={!!errors.cPass}
+        helperText={errors.cPass}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">

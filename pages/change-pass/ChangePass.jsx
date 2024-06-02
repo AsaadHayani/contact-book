@@ -12,14 +12,13 @@ import Cookies from "universal-cookie";
 import axiosInstance from "../components/api";
 import Loading from "../components/Loading";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Error from "../components/Error";
 
 const ChangePass = () => {
   const [email, setEmail] = useState("asaad99hayani@gmail.com");
   const [errorEmail, setErrorEmail] = useState(false);
 
-  const [loading, setLoading] = useState(false);
-
-  const createContact = async () => {
+  const changePassword = async () => {
     const response = await axiosInstance.post(
       `forgot-password`,
       { email },
@@ -33,27 +32,34 @@ const ChangePass = () => {
   };
 
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
-    mutationFn: createContact,
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: changePassword,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["forgot-pass"] });
       console.log("email send successfully");
     },
     onerror: (error) => {
-      console.log(error.response.status);
       if (error.response.status === 404) setErrorEmail(true);
     },
   });
 
+  const [errors, setErrors] = React.useState({});
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(email);
-    mutate(email);
+    const newErrors = {};
+    if (!email) newErrors.email = "Field required";
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      mutate(email);
+    }
   };
 
   return (
     <>
-      {loading && <Loading open={loading} setOpen={setLoading} />}
+      {isPending && <Loading open={isPending} />}
+      {isError && <Error error={error} />}
+
       <TextField
         label="Enter your email address"
         size="small"

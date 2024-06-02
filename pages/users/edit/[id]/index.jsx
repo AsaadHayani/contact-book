@@ -3,9 +3,11 @@ import {
   Box,
   Button,
   FormControl,
+  FormControlLabel,
   Grid,
   MenuItem,
   Select,
+  Switch,
   TextField,
   Typography,
 } from "@mui/material";
@@ -37,7 +39,6 @@ const Edit = () => {
     queryFn: fetchContact,
     queryKey: ["user", id],
   });
-  console.log(user);
 
   const [form, setForm] = useState({});
   const handleFormChange = (e) => {
@@ -64,39 +65,55 @@ const Edit = () => {
     return response.data;
   };
 
-  const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
+  const {
+    mutate,
+    isPending,
+    isError: isErrorPage,
+    error: errorPage,
+  } = useMutation({
     mutationFn: editUser,
-    onMutate: () => {
-      ///////////////////////////////////
-      setLoading(true);
-    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["invite-user"] });
       router.back();
-      setLoading(false);
       console.log("edit user success");
-    },
-    onError: (error) => {
-      alert("edit user error:", error);
     },
   });
 
+  const [errors, setErrors] = React.useState({});
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate(form);
+    const newErrors = {};
+    if (!form.firstName) newErrors.firstName = "Field required";
+    if (!form.lastName) newErrors.lastName = "Field required";
+    if (!form.email) newErrors.email = "Field required";
+    if (!form.phoneNumber) newErrors.phoneNumber = "Field required";
+    if (!form.role) newErrors.role = "Field required";
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      mutate(form);
+    }
   };
 
-  if (isError) return alert(`Error: ${error.message}`);
-  if (isLoading) return <Loading open={loading} setOpen={setLoading} />;
+  const switchElement = (checked) => {
+    return (
+      <FormControlLabel
+        control={<Switch checked={checked === "Admin" ? true : false} />}
+        label={checked === "Admin" ? "Locked" : "Unlocked"}
+      />
+    );
+  };
 
   return (
     <>
-      {loading && <Loading open={loading} setOpen={setLoading} />}
+      {isPending && <Loading open={isPending} />}
+      {isErrorPage && <Error error={errorPage} />}
+      {isLoading && <Loading open={isLoading} />}
+      {isError && <Error error={error} />}
       <Path title="User Edit" path="Home / Users / Edit" />
 
-      <FullCard title="User Details" isSwitch={true} textSwitch="Unlocked">
+      <FullCard title="User Details" element={switchElement(user?.role)}>
         <Grid container spacing={2} columns={16} mb="20px">
           <Grid item xs={16} md={8}>
             <Box mb="10px">
@@ -111,6 +128,8 @@ const Edit = () => {
               required
               value={user?.firstName || ""}
               size="small"
+              error={!!errors.firstName}
+              helperText={errors.firstName}
               fullWidth
             />
           </Grid>
@@ -127,6 +146,8 @@ const Edit = () => {
               required
               value={user?.lastName || ""}
               size="small"
+              error={!!errors.lastName}
+              helperText={errors.lastName}
               fullWidth
             />
           </Grid>
@@ -146,6 +167,8 @@ const Edit = () => {
               required
               value={user?.email || ""}
               size="small"
+              error={!!errors.email}
+              helperText={errors.email}
               fullWidth
             />
           </Grid>
@@ -162,6 +185,8 @@ const Edit = () => {
               required
               value={user?.phoneNumber || ""}
               size="small"
+              error={!!errors.phoneNumber}
+              helperText={errors.phoneNumber}
               fullWidth
             />
           </Grid>
