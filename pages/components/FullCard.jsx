@@ -1,11 +1,4 @@
-import {
-  Card,
-  Container,
-  FormControlLabel,
-  Paper,
-  Switch,
-  Typography,
-} from "@mui/material";
+import { Card, Container, Paper, Typography } from "@mui/material";
 import React from "react";
 
 const FullCard = ({ children, title, element }) => {

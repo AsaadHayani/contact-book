@@ -3,9 +3,9 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <Box sx={{ mt: "auto" }}>
-      <Divider />
-      <Container>
+    <Container component="footer" sx={{ mt: "auto" }}>
+      <Box>
+        <Divider />
         <Box
           display="flex"
           justifyContent="space-between"
@@ -20,8 +20,8 @@ const Footer = () => {
             Privacy Policy - Terms & Conditions
           </Typography>
         </Box>
-      </Container>
-    </Box>
+      </Box>
+    </Container>
   );
 };
 

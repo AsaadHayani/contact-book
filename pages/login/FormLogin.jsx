@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Checkbox,
-  Container,
   Divider,
   FormControlLabel,
   IconButton,
@@ -11,8 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { grey, red } from "@mui/material/colors";
-import axios from "axios";
+import { grey } from "@mui/material/colors";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -54,6 +52,7 @@ const FormLogin = () => {
     onSuccess: (response) => {
       const token = response.token;
       cookie.set("Bearer", token, { path: "/" });
+      cookie.set("role", response.role, { path: "/" });
       router.push("/");
     },
     onError: (error) => {
@@ -121,7 +120,12 @@ const FormLogin = () => {
         </Box>
       </Box>
 
-      <Button variant="contained" type="submit" onClick={handleSubmit}>
+      <Button
+        variant="contained"
+        type="submit"
+        onClick={handleSubmit}
+        sx={{ textTransform: "none" }}
+      >
         Sign in
       </Button>
 
@@ -131,7 +135,7 @@ const FormLogin = () => {
             position: "absolute",
             top: "13px",
             left: "0",
-            width: "25%",
+            width: "20%",
             borderColor: grey[700],
           }}
         />
@@ -143,7 +147,7 @@ const FormLogin = () => {
             position: "absolute",
             top: "13px",
             right: "0",
-            width: "25%",
+            width: "20%",
             borderColor: grey[700],
           }}
         />
@@ -151,7 +155,7 @@ const FormLogin = () => {
       <Box sx={{ textAlign: "center" }}>
         <Button
           variant="outlined"
-          sx={{ width: "220px" }}
+          sx={{ px: "30px", textTransform: "none" }}
           onClick={() => {
             router.push("/register");
           }}

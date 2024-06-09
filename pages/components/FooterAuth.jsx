@@ -1,6 +1,4 @@
-import { BorderColor } from "@mui/icons-material";
 import { Box, Container, Divider, Typography } from "@mui/material";
-import { grey } from "@mui/material/colors";
 import React from "react";
 
 const FooterAuth = () => {

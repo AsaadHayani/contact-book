@@ -10,12 +10,15 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Pagination,
 } from "@mui/material";
 import Path from "../components/Path";
 import axiosInstance from "../components/api";
 import Cookies from "universal-cookie";
 import { useQuery } from "@tanstack/react-query";
 import ColoredBullet from "../components/ColoredBullet";
+import Error from "../components/Error";
+import Loading from "../components/Loading";
 
 export default function Activities() {
   const cookie = new Cookies();
@@ -27,7 +30,7 @@ export default function Activities() {
     });
     return response.data;
   };
-  const { data: logs, isLoading, error, isError } = useQuery({
+  const { data: logs, isPending, error, isError } = useQuery({
     queryKey: ["logs"],
     queryFn: fetchLogs,
   });
@@ -46,21 +49,16 @@ export default function Activities() {
     "Nov",
     "Dec",
   ];
-
-  if (isError) return alert(`Error: ${error.message}`);
-  if (isLoading)
-    return (
-      <Typography variant="h4" textAlign="center" color="error">
-        Loading...
-      </Typography>
-    );
   return (
     <>
+      {isPending && <Loading open={isPending} />}
+      {isError && <Error error={error} />}
+
       <Path title="Activities" path="Home / Activities" />
       <Container>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{ px: 5, py: 3 }}>
               <Table
                 sx={{ minWidth: 140 }}
                 size="small"
@@ -68,7 +66,9 @@ export default function Activities() {
               >
                 <TableHead>
                   <TableRow>
-                    <TableCell>Contact</TableCell>
+                    <TableCell sx={{ pr: { xs: 0, md: 30 } }}>
+                      Contact
+                    </TableCell>
                     <TableCell>Date</TableCell>
                     <TableCell>Action</TableCell>
                     <TableCell>BY</TableCell>
@@ -127,6 +127,7 @@ export default function Activities() {
                 </TableBody>
               </Table>
             </TableContainer>
+            <Pagination count={10} color="primary" shape="rounded" />
           </Grid>
         </Grid>
       </Container>

@@ -55,13 +55,19 @@ const InviteUser = () => {
     return response.data;
   };
 
+  const [errorEmail, setErrorEmail] = useState(false);
   const queryClient = useQueryClient();
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: createInviteUser,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["invite-user"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       console.log("invite user success");
       router.push(`/users`);
+    },
+    onError: (error) => {
+      if (error.response.data === "User is already registered.") {
+        setErrorEmail(true);
+      }
     },
   });
 
@@ -153,8 +159,8 @@ const InviteUser = () => {
               onChange={handleFormChange}
               label="mail@email.com"
               size="small"
-              error={!!errors.email}
-              helperText={errors.email}
+              error={!!errors.email || errorEmail}
+              helperText={errors.email || (errorEmail && "Email Exist")}
               fullWidth
             />
           </Grid>

@@ -38,7 +38,8 @@ export default function App({ Component, pageProps }) {
   const login = "login",
     register = "register",
     changePass = "change-pass",
-    setPass = "set-pass";
+    setPass = "set-password",
+    resetPass = "reset-password";
   return (
     <QueryClientProvider client={queryClient}>
       <ContextProvider>
@@ -48,16 +49,18 @@ export default function App({ Component, pageProps }) {
               {route.pathname !== `/${login}` &&
               route.pathname !== `/${register}` &&
               route.pathname !== `/${changePass}` &&
-              route.pathname !== `/${setPass}` ? (
+              route.pathname !== `/${setPass}` &&
+              route.pathname !== `/${resetPass}` ? (
                 <Navbar />
               ) : null}
               <Component {...pageProps} />
             </main>
-            <ReactQueryDevtools initialIsOpen={false} />
+            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             {route.pathname !== `/${login}` &&
             route.pathname !== `/${register}` &&
             route.pathname !== `/${changePass}` &&
-            route.pathname !== `/${setPass}` ? (
+            route.pathname !== `/${setPass}` &&
+            route.pathname !== `/${resetPass}` ? (
               <Footer />
             ) : null}
           </Box>

@@ -8,7 +8,6 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
-import Image from "next/image";
 import { EditOffOutlined } from "@mui/icons-material";
 import Path from "../../components/Path";
 import { useRouter } from "next/router";
@@ -42,28 +41,12 @@ const Details = () => {
   const switchElement = (checked) => {
     return (
       <FormControlLabel
-        control={<Switch checked={checked === "Active" ? true : false} />}
         label={checked === "Active" ? "Active" : "Inactive"}
+        labelPlacement="start"
+        control={<Switch checked={checked === "Active" ? true : false} />}
       />
     );
   };
-
-  // const handdel = async () => {
-  //   const response = await axiosInstance.delete(`contacts/${id}`);
-  //   return response.data;
-  // };
-  // const queryClient = useQueryClient();
-  // const { mutate } = useMutation({
-  //   mutationFn: handdel,
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["contacts"] });
-  //     console.log("deleted");
-  //     router.back();
-  //   },
-  // });
-  // const del = () => {
-  //   mutate();
-  // };
 
   return (
     <>
@@ -75,8 +58,6 @@ const Details = () => {
         title="Contact details"
         element={switchElement(contact?.status)}
       >
-        {/* <button onClick={del}>Delete</button> */}
-
         <Grid
           container
           spacing={{ xs: 2, md: 3 }}
@@ -84,21 +65,16 @@ const Details = () => {
           textAlign="center"
         >
           <Grid item xs={12} md={4}>
-            {contact?.image != null ? (
-              <img
-                src="/images/Person.png"
-                width={200}
-                height={200}
-                style={{ borderRadius: "50%" }}
-              />
-            ) : (
-              <img
-                src="/images/Placeholder.jpg"
-                width={200}
-                height={200}
-                style={{ borderRadius: "50%" }}
-              />
-            )}
+            <img
+              src={
+                contact?.image != ""
+                  ? "/images/Placeholder.jpg"
+                  : contact?.image
+              }
+              width={200}
+              height={200}
+              style={{ borderRadius: "50%" }}
+            />
           </Grid>
 
           <Grid item xs={12} sm={8} md={4} textAlign="center">
@@ -143,14 +119,16 @@ const Details = () => {
               </Typography>
             </Box>
             <Box columnGap="20px" sx={{ display: { xs: "none", md: "flex" } }}>
-              <Button
-                variant="outlined"
-                sx={{ width: "120px", textTransform: "none" }}
-                startIcon={<EditOffOutlined />}
-                onClick={() => router.push(`/contacts/edit/${contact?.id}`)}
-              >
-                Edit
-              </Button>
+              {cookie.get("role") !== "User" && (
+                <Button
+                  variant="outlined"
+                  sx={{ width: "120px", textTransform: "none" }}
+                  startIcon={<EditOffOutlined />}
+                  onClick={() => router.push(`/contacts/edit/${contact?.id}`)}
+                >
+                  Edit
+                </Button>
+              )}
               <Button
                 variant="outlined"
                 sx={{ width: "120px", textTransform: "none" }}
@@ -207,14 +185,16 @@ const Details = () => {
               </Typography>
             </Box>
             <Box columnGap="20px" sx={{ display: { xs: "flex", md: "none" } }}>
-              <Button
-                variant="outlined"
-                sx={{ width: "120px", textTransform: "none" }}
-                startIcon={<EditOffOutlined />}
-                onClick={() => router.push(`/contacts/edit/${contact?.id}`)}
-              >
-                Edit
-              </Button>
+              {cookie.get("role") !== "User" && (
+                <Button
+                  variant="outlined"
+                  sx={{ width: "120px", textTransform: "none" }}
+                  startIcon={<EditOffOutlined />}
+                  onClick={() => router.push(`/contacts/edit/${contact?.id}`)}
+                >
+                  Edit
+                </Button>
+              )}
               <Button
                 variant="outlined"
                 sx={{ width: "120px", textTransform: "none" }}

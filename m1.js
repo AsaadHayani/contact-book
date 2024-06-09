@@ -27,14 +27,24 @@ export function middleware(request) {
 
   const url = request.nextUrl.clone();
 
-  if (protectedPages.includes(url.pathname)) {
-    if (!token) {
-      return NextResponse.redirect(new URL("/login", request.url));
+  // Function to check if the token is expired
+  function isTokenExpired(token) {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload.exp * 1000 < Date.now();
+    } catch (e) {
+      return true; // If there is an error decoding the token, consider it expired
     }
   }
 
   if (unprotectedPages.includes(url.pathname)) {
-    if (token) {
+    if (!token || isTokenExpired(token)) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+  }
+
+  if (protectedPages.includes(url.pathname)) {
+    if (token && !isTokenExpired(token)) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }

@@ -1,5 +1,4 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
-import Image from "next/image";
 import React from "react";
 import FooterAuth from "./FooterAuth";
 
@@ -8,8 +7,7 @@ const LayoutAuth = ({ children, title }) => {
     <>
       <Grid
         container
-        rowSpacing={1}
-        columnSpacing={3}
+        columnSpacing={10}
         columns={16}
         sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       >
@@ -35,7 +33,7 @@ const LayoutAuth = ({ children, title }) => {
         </Grid>
 
         <Grid item xs={16} sm={7}>
-          <Container>
+          <Container sx={{ width: "80%" }}>
             <Box
               sx={{
                 display: { xs: "block", sm: "none" },

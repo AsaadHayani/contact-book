@@ -1,12 +1,29 @@
-import { Box, Button, Grid, TextField } from "@mui/material";
+import { Button, Grid, Menu, MenuItem, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import React from "react";
+import Cookies from "universal-cookie";
 
-const TopTableContacts = () => {
+const TopTableContacts = ({ handleDelete, isPendingDelete }) => {
   const router = useRouter();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClickMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+  const cookie = new Cookies();
+
   return (
-    <Grid container spacing={2} columns={16} mb="10px">
-      <Grid item xs={16} sm={16} md={4}>
+    <Grid
+      container
+      spacing={2}
+      alignItems="center"
+      mb="10px"
+      flexDirection={{ xs: "column-reverse", md: "row" }}
+    >
+      <Grid item xs={12} md={4}>
         <TextField
           type="search"
           label="Search"
@@ -15,59 +32,86 @@ const TopTableContacts = () => {
           sx={{ bgcolor: "white" }}
         />
       </Grid>
-      <Grid item xs={16} sm={16} md={12}>
-        <Grid
-          container
-          spacing={2}
-          sx={{ justifyContent: { md: "end", xs: "center" } }}
-        >
-          <Grid item xs={8} sm={8} md={3}>
+      <Grid item xs={12} md={8}>
+        <Grid container spacing={2}>
+          {cookie.get("role") !== "User" && (
+            <Grid item xs={6} sm={6} md={3}>
+              <Button
+                variant="contained"
+                color="error"
+                fullWidth
+                sx={{ textTransform: "none" }}
+                onClick={handleDelete}
+                disabled={isPendingDelete}
+              >
+                Delete
+              </Button>
+            </Grid>
+          )}
+          <Grid item xs={6} sm={6} md={3}>
             <Button
+              aria-controls={openMenu ? "basic-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={openMenu ? "true" : undefined}
+              onClick={handleClickMenu}
               variant="contained"
-              sx={{
-                bgcolor: "#DC3545",
-                "&:hover": { bgcolor: "#b52230" },
-                textTransform: "none",
-              }}
-              fullWidth
-            >
-              Delete
-            </Button>
-          </Grid>
-          <Grid item xs={8} sm={8} md={3}>
-            <Button
-              variant="contained"
-              onClick={() => router.push(`/export-email`)}
               fullWidth
               sx={{ textTransform: "none" }}
             >
               Export to
             </Button>
-          </Grid>
-          <Grid item xs={8} sm={8} md={3}>
-            <Button
-              variant="contained"
-              fullWidth
-              onClick={() => router.push("/send-email")}
-              sx={{ textTransform: "none" }}
-            >
-              Send Email
-            </Button>
-          </Grid>
-          <Grid item xs={8} sm={8} md={3}>
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{
-                bgcolor: "#28A745",
-                "&:hover": { bgcolor: "#208837" },
-                textTransform: "none",
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={openMenu}
+              onClose={handleCloseMenu}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
               }}
-              onClick={() => router.push("/contacts/create")}
             >
-              Create New
-            </Button>
+              <MenuItem
+                onClick={() => {
+                  handleCloseMenu;
+                  router.push(`/print`);
+                }}
+              >
+                PDF File
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleCloseMenu;
+                  router.push(`/export-email`);
+                }}
+              >
+                Send via email
+              </MenuItem>
+            </Menu>
           </Grid>
+          {cookie.get("role") !== "User" && (
+            <Grid item xs={6} sm={6} md={3}>
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{ textTransform: "none" }}
+                onClick={() => router.push("/send-email")}
+              >
+                Send Email
+              </Button>
+            </Grid>
+          )}
+          {cookie.get("role") !== "User" && (
+            <Grid item xs={6} sm={6} md={3}>
+              <Button
+                variant="contained"
+                fullWidth
+                color="success"
+                sx={{ textTransform: "none" }}
+                onClick={() => router.push("/contacts/create")}
+              >
+                Create New
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </Grid>

@@ -1,4 +1,3 @@
-import { useTheme } from "@emotion/react";
 import { Box, Container, Divider, Typography } from "@mui/material";
 import Head from "next/head";
 import React from "react";

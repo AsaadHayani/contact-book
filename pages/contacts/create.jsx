@@ -21,62 +21,58 @@ const Create = () => {
     address: "address",
     addressTwo: "address2",
   });
-  const [image, setImage] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [image, setImage] = useState("/images/Placeholder.jpg");
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      setImage(URL.createObjectURL(file));
+    }
+  };
 
   const handleFormChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     console.log(form);
-  };
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(e.target.files.item(0));
-    }
   };
   const router = useRouter();
   const cookie = new Cookies();
   const token = cookie.get("Bearer");
 
   const createContact = async () => {
-    // const formData = new FormData();
-    // formData.append("firstName", form.firstName);
-    // formData.append("lastName", form.lastName);
-    // formData.append("email", form.email);
-    // formData.append("emailTwo", form.emailTwo);
-    // formData.append("mobileNumber", form.mobileNumber);
-    // formData.append("phoneNumber", form.phoneNumber);
-    // formData.append("address", form.address);
-    // formData.append("addressTwo", form.addressTwo);
-    // formData.append("image", image);
-    const response = await axiosInstance.post(
-      `contacts`,
-      {
-        FirstName: form.firstName,
-        LastName: form.lastName,
-        Email: form.email,
-        emailTwo: form.emailTwo,
-        mobileNumber: form.mobileNumber,
-        PhoneNumber: form.phoneNumber,
-        Address: form.address,
-        addressTwo: form.addressTwo,
+    const formData = new FormData();
+    formData.append("firstName", form.firstName);
+    formData.append("lastName", form.lastName);
+    formData.append("email", form.email);
+    formData.append("emailTwo", form.emailTwo);
+    formData.append("mobileNumber", form.mobileNumber);
+    formData.append("phoneNumber", form.phoneNumber);
+    formData.append("address", form.address);
+    formData.append("addressTwo", form.addressTwo);
+    formData.append("image", image);
+    const response = await axiosInstance.post(`contacts`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
       },
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Accept: "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    });
     return response.data;
   };
+
+  const [errorEmail, setErrorEmail] = useState(false);
 
   const queryClient = useQueryClient();
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: createContact,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["contacts"] });
-      console.log("create contact successfully");
+      router.push(`/contacts`);
+    },
+    onError: (error) => {
+      if (error.response.data) {
+        setErrorEmail(true);
+      }
     },
   });
 
@@ -87,11 +83,8 @@ const Create = () => {
     if (!form.firstName) newErrors.firstName = "Field required";
     if (!form.lastName) newErrors.lastName = "Field required";
     if (!form.email) newErrors.email = "Field required";
-    if (!form.emailTwo) newErrors.emailTwo = "Field required";
     if (!form.phoneNumber) newErrors.phoneNumber = "Field required";
     if (!form.address) newErrors.address = "Field required";
-    if (!form.addressTwo) newErrors.addressTwo = "Field required";
-    if (!form.mobileNumber) newErrors.mobileNumber = "Field required";
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
@@ -113,7 +106,7 @@ const Create = () => {
         >
           <Grid item xs={12} md={4}>
             <img
-              src="/images/Placeholder.jpg"
+              src={image}
               width={200}
               height={200}
               style={{ borderRadius: "50%" }}
@@ -132,9 +125,14 @@ const Create = () => {
                 id="file-upload"
                 style={{ display: "none" }}
                 type="file"
+                name="image"
                 onChange={handleFileChange}
               />
-              <Button variant="contained" component="span">
+              <Button
+                variant="contained"
+                sx={{ textTransform: "none" }}
+                component="span"
+              >
                 Upload new image
               </Button>
             </label>
@@ -178,8 +176,8 @@ const Create = () => {
                 name="email"
                 label="name@example.com"
                 size="small"
-                error={!!errors.email}
-                helperText={errors.email}
+                error={!!errors.email || errorEmail}
+                helperText={errors.email || (errorEmail && "Email Exist")}
                 fullWidth
               />
             </Box>
@@ -226,14 +224,14 @@ const Create = () => {
               <Button
                 variant="contained"
                 onClick={handleCreate}
-                sx={{ width: "120px" }}
+                sx={{ width: "120px", textTransform: "none" }}
                 type="submit"
               >
                 Create
               </Button>
               <Button
                 variant="outlined"
-                sx={{ width: "120px" }}
+                sx={{ width: "120px", textTransform: "none" }}
                 onClick={() => router.back()}
               >
                 Back
@@ -324,14 +322,14 @@ const Create = () => {
               <Button
                 variant="contained"
                 onClick={handleCreate}
-                sx={{ width: "120px" }}
+                sx={{ width: "120px", textTransform: "none" }}
                 type="submit"
               >
                 Create
               </Button>
               <Button
                 variant="outlined"
-                sx={{ width: "120px" }}
+                sx={{ width: "120px", textTransform: "none" }}
                 onClick={() => router.back()}
               >
                 Back

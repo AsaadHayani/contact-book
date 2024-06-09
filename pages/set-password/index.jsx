@@ -6,7 +6,7 @@ import SetPass from "./SetPass";
 const Index = () => {
   return (
     <>
-      <Title title="Reset Password" />
+      <Title title="Set Password" />
       <LayoutAuth children={<SetPass />} title="Set Password" />
     </>
   );

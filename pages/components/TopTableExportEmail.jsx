@@ -1,46 +1,53 @@
-import { CheckCircleOutline } from "@mui/icons-material";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Button, Grid, TextField } from "@mui/material";
 import React from "react";
 
 const TopTableExportEmail = () => {
   return (
-    <Grid container spacing={2} columns={16}>
-      <Grid item xs={16} sm={16} md={4}>
+    <Grid
+      container
+      spacing={2}
+      mb="10px"
+      flexDirection={{ xs: "column-reverse", md: "row" }}
+    >
+      <Grid item xs={12} md={4}>
         <TextField
           type="search"
           label="Search"
+          size="small"
           fullWidth
           sx={{ bgcolor: "white" }}
-          size="small"
         />
       </Grid>
-      <Grid item xs={16} sm={16} md={12} container spacing={2}>
-        <Grid item xs={12} sm={12} md={4} container>
-          <CheckCircleOutline color="success" />
-          <Typography
-            variant="body1"
-            color="green"
-            sx={{ marginLeft: { xs: 0, md: 1 } }}
-          >
-            Email sent successfully
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={12} md={4}>
-          <TextField
-            type="email"
-            sx={{ bgcolor: "white" }}
-            label="name@example.com"
-            size="small"
-            fullWidt
-          />
-        </Grid>
-        <Grid item xs={12} sm={12} md={4}>
-          <Button
-            variant="contained"
-            sx={{ width: "120px", textTransform: "none" }}
-          >
-            Send
-          </Button>
+      <Grid item xs={12} md={8}>
+        <Grid container spacing={2} justifyContent="flex-end">
+          {/* <Grid item xs={6} sm={6} md={3}>
+            <CheckCircleOutline color="success" />
+            <Typography
+              variant="body1"
+              color="green"
+              sx={{ marginLeft: { xs: 0, md: 1 } }}
+            >
+              Email sent successfully
+            </Typography>
+          </Grid> */}
+          <Grid item xs={6} sm={6} md={4}>
+            <TextField
+              type="email"
+              sx={{ bgcolor: "white" }}
+              label="name@example.com"
+              size="small"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={6} sm={6} md={4}>
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{ textTransform: "none" }}
+            >
+              Send
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </Grid>

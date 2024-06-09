@@ -1,14 +1,6 @@
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  IconButton,
-  InputAdornment,
-  TextField,
-} from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import Link from "next/link";
 import React, { useState } from "react";
-import Cookies from "universal-cookie";
 import axiosInstance from "../components/api";
 import Loading from "../components/Loading";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -19,15 +11,7 @@ const ChangePass = () => {
   const [errorEmail, setErrorEmail] = useState(false);
 
   const changePassword = async () => {
-    const response = await axiosInstance.post(
-      `forgot-password`,
-      { email },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await axiosInstance.post(`forgot-password`, { email });
     return response.data;
   };
 
@@ -70,7 +54,12 @@ const ChangePass = () => {
         error={errorEmail}
         helperText={errorEmail ? "Email not Exist!" : null}
       />
-      <Button variant="contained" type="submit" onClick={handleSubmit}>
+      <Button
+        variant="contained"
+        type="submit"
+        onClick={handleSubmit}
+        sx={{ textTransform: "none" }}
+      >
         Send
       </Button>
       <Link style={{ marginTop: "30px", textAlign: "center" }} href={"/login"}>

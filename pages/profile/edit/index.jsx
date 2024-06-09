@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import Image from "next/image";
-import { useRouter } from "next/router";
 import Cookies from "universal-cookie";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Path from "@/pages/components/Path";
 import FullCard from "@/pages/components/FullCard";
 import axiosInstance from "@/pages/components/api";
-import { grey } from "@mui/material/colors";
 import Loading from "@/pages/components/Loading";
 
 const Edit = () => {
@@ -30,27 +27,28 @@ const Edit = () => {
 
   const [form, setForm] = useState({});
 
+  useEffect(() => {
+    if (company) {
+      setForm(company);
+    }
+  }, [company]);
+
   const editCompanies = async () => {
-    const response = await axiosInstance.put(
-      `companies/${id}`,
-      {
-        firstName: form.firstName,
-        lastName: form.lastName,
-        email: form.email,
-        phoneNumber: form.phoneNumber,
-        address: form.address,
+    const response = await axiosInstance.put(`companies`, form, {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    });
     return response.data;
   };
 
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
+  const {
+    mutate,
+    isPending: isPendingPage,
+    isError: isErrorPage,
+    error: errorPage,
+  } = useMutation({
     mutationFn: editCompanies,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["contacts"] });
@@ -62,28 +60,22 @@ const Edit = () => {
   const [errors, setErrors] = React.useState({});
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newErrors = {};
-    if (!form.companyName) newErrors.companyName = "Field required";
-    if (!form.vatNumber) newErrors.vatNumber = "Field required";
-    if (!form.streetOne) newErrors.streetOne = "Field required";
-    if (!form.streetTwo) newErrors.streetTwo = "Field required";
-    if (!form.state) newErrors.state = "Field required";
-    if (!form.zip) newErrors.zip = "Field required";
-    if (!form.city) newErrors.city = "Field required";
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-    } else {
-      mutate(form);
-    }
+    mutate(form);
   };
 
   const handleFormChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     console.log(form);
   };
-  console.log(company);
+
+  const [userRole, setUserRole] = useState("User");
+  useEffect(() => {
+    setUserRole(cookie.get("role"));
+  }, [cookie.get("role")]);
+
   return (
     <>
+      {isPendingPage && <Loading open={isPendingPage} />}
       {isPending && <Loading open={isPending} />}
       {isError && <Error error={error} />}
 
@@ -106,7 +98,7 @@ const Edit = () => {
               <TextField
                 type="text"
                 name="companyName"
-                value={company?.companyName || ""}
+                value={form.companyName || ""}
                 onChange={handleFormChange}
                 size="small"
                 error={!!errors.companyName}
@@ -122,7 +114,8 @@ const Edit = () => {
               </Box>
               <TextField
                 type="text"
-                value={company?.vatNumber || ""}
+                value={form.vatNumber || ""}
+                onChange={handleFormChange}
                 name="vatNumber"
                 size="small"
                 fullWidth
@@ -135,8 +128,9 @@ const Edit = () => {
                 </Typography>
               </Box>
               <TextField
-                type="email"
-                value={company?.streetOne}
+                type="text"
+                value={form.streetOne || ""}
+                onChange={handleFormChange}
                 name="streetOne"
                 size="small"
                 fullWidth
@@ -150,28 +144,12 @@ const Edit = () => {
               </Box>
               <TextField
                 type="text"
-                value={company?.streetTwo}
+                value={form.streetTwo || ""}
+                onChange={handleFormChange}
                 name="streetTwo"
                 size="small"
                 fullWidth
               />
-            </Box>
-            <Box columnGap="20px" sx={{ display: { xs: "none", md: "flex" } }}>
-              <Button
-                variant="contained"
-                sx={{ width: "120px" }}
-                type="submit"
-                onClick={handleSubmit}
-              >
-                Save
-              </Button>
-              <Button
-                variant="outlined"
-                sx={{ width: "120px" }}
-                onClick={() => router.back()}
-              >
-                Back
-              </Button>
             </Box>
           </Grid>
 
@@ -186,8 +164,9 @@ const Edit = () => {
                 type="text"
                 size="small"
                 fullWidth
-                value={company?.city}
+                value={form.city || ""}
                 name="city"
+                onChange={handleFormChange}
               />
             </Box>
             <Box mb="20px">
@@ -198,10 +177,11 @@ const Edit = () => {
               </Box>
               <TextField
                 type="text"
-                value={company?.state}
+                value={form.state || ""}
                 name="state"
                 size="small"
                 fullWidth
+                onChange={handleFormChange}
               />
             </Box>
             <Box mb="20px">
@@ -213,7 +193,8 @@ const Edit = () => {
               <TextField
                 type="text"
                 label="555-123-4567"
-                value={company?.zip}
+                value={form.zip || ""}
+                onChange={handleFormChange}
                 name="zip"
                 size="small"
                 fullWidth
@@ -227,8 +208,9 @@ const Edit = () => {
               </Box>
               <TextField
                 type="text"
-                value={company?.country}
+                value={form.country || ""}
                 name="country"
+                onChange={handleFormChange}
                 size="small"
                 fullWidth
               />
@@ -264,6 +246,25 @@ const Edit = () => {
             ></iframe>
           </Grid>
         </Grid>
+        <Box columnGap="20px" sx={{ display: { xs: "none", md: "flex" } }}>
+          {userRole === "Owner" && (
+            <Button
+              variant="contained"
+              sx={{ px: "30px", textTransform: "none" }}
+              type="submit"
+              onClick={handleSubmit}
+            >
+              Save
+            </Button>
+          )}
+          <Button
+            variant="outlined"
+            sx={{ px: "30px", textTransform: "none" }}
+            onClick={() => router.back()}
+          >
+            Back
+          </Button>
+        </Box>
       </FullCard>
     </>
   );

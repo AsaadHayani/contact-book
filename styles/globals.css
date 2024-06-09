@@ -27,3 +27,9 @@ table thead th {
   border: 1px solid #b1b1b1;
   border-radius: 5px;
 }
+nav.MuiPagination-root {
+  padding-block: 10px;
+}
+nav ul.MuiPagination-ul {
+  justify-content: flex-end;
+}

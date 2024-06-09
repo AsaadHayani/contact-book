@@ -1,20 +1,13 @@
 import React, { useState } from "react";
 import {
-  Alert,
   Box,
   Button,
-  ButtonGroup,
   Container,
-  Divider,
   Grid,
-  IconButton,
-  InputLabel,
-  Snackbar,
   TextField,
-  TextareaAutosize,
+  Typography,
 } from "@mui/material";
 import Path from "../components/Path";
-import { grey } from "@mui/material/colors";
 import axiosInstance from "../components/api";
 import Cookies from "universal-cookie";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -24,48 +17,44 @@ import ButtonGroups from "./ButtonGroups";
 import Error from "../components/Error";
 
 const Index = () => {
-  const [form, setForm] = React.useState({
-    to: "to@xyz.com",
+  const [form, setForm] = useState({
+    to: "asaad99hayani@gmail.com",
     cc: "cc@xyz.com",
     bcc: "bcc@xyz.com",
     subject: "subject",
     body: "message",
   });
-  const [errors, setErrors] = React.useState({});
-
+  const [errors, setErrors] = useState({});
   const cookie = new Cookies();
+  const [errorEmail, setErrorEmail] = useState(false);
+
   const handleFormChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     console.log(form);
   };
+
   const handleSubmit = async () => {
-    const response = await axiosInstance.post(
-      `contacts/send-email`,
-      {
-        to: form.to,
-        cc: form.cc,
-        bcc: form.bcc,
-        subject: form.subject,
-        body: form.body,
+    const response = await axiosInstance.post(`contacts/send-email`, form, {
+      headers: {
+        Authorization: `Bearer ${cookie.get("Bearer")}`,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${cookie.get("Bearer")}`,
-        },
-      }
-    );
+    });
     return response.data;
   };
+
   const router = useRouter();
   const queryClient = useQueryClient();
   const { mutate, isPending, error, isError } = useMutation({
     mutationFn: handleSubmit,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["send-email"] });
-      router.push(`/users`);
       console.log("send-email success");
+      setErrorEmail(true);
+      router.push(`/users`);
     },
-    onError: (error) => console.log(error),
+    onError: (error) => {
+      if (error.response.data) setErrorEmail(true);
+    },
   });
 
   const handleSendEmail = (e) => {
@@ -84,6 +73,7 @@ const Index = () => {
       mutate(form);
     }
   };
+
   const [text, setText] = useState("");
   const [style, setStyle] = useState({});
   const [alignment, setAlignment] = useState("left");
@@ -97,77 +87,62 @@ const Index = () => {
       {isError && <Error error={error} />}
       <Path title="Send Email" path="Home / Contacts / Send Email" />
 
-      <Container>
+      <Container component="form">
         <Grid
           display="flex"
           justifyContent={{ xs: "center", sm: "end" }}
           alignItems="center"
-          gap="10px"
-          mb="10px"
+          gap="20px"
+          mb="20px"
         >
           <Button
+            color="error"
             variant="contained"
             sx={{
-              bgcolor: "#DC3545",
-              width: "120px",
-              "&:hover": { bgcolor: "#b52230" },
+              px: "30px",
               textTransform: "none",
             }}
           >
             Discard
           </Button>
-          <Button
-            variant="contained"
-            type="submit"
-            onClick={handleSendEmail}
-            sx={{ width: "120px", textDecoration: "none" }}
-          >
-            Send
-          </Button>
+          {cookie.get("role") !== "User" && (
+            <Button
+              variant="contained"
+              type="submit"
+              onClick={handleSendEmail}
+              sx={{ width: "120px", textTransform: "none" }}
+            >
+              Send
+            </Button>
+          )}
         </Grid>
-        <Grid
-          container
-          spacing={2}
-          columns={16}
-          sx={{
-            paddingInline: "40px",
-            paddingBlock: "20px",
-            bgcolor: "white",
-            border: 1,
-            borderColor: grey[500],
-            marginBlock: 1,
-          }}
-        >
-          <Grid
-            item
-            xs={16}
-            md={8}
-            spacing={2}
-            display="flex"
-            alignItems="center"
-          >
-            <InputLabel sx={{ fontWeight: "bold", flexGrow: 1 }}>
-              To:
-            </InputLabel>
-            <TextField
-              type="email"
-              required
-              name="to"
-              value={form.to}
-              onChange={handleFormChange}
-              label="abc@xyz.com"
-              size="small"
-              error={!!errors.to}
-              helperText={errors.to}
-              sx={{ flexGrow: 15 }}
-            />
+
+        <Grid container spacing={2} sx={{ bgcolor: "white" }}>
+          <Grid item xs={12} md={12}>
+            <Box display="flex" alignItems="center" gap="20px">
+              <Typography color="initial" sx={{ fontWeight: "bold" }}>
+                To:
+              </Typography>
+              <TextField
+                type="email"
+                required
+                name="to"
+                value={form.to}
+                onChange={handleFormChange}
+                label="abc@xyz.com"
+                size="small"
+                error={!!errors.to || errorEmail}
+                helperText={errors.to || (errorEmail && "Email not Exist")}
+                fullWidth
+              />
+            </Box>
           </Grid>
 
-          <Grid item xs={16} md={16} container spacing={2}>
-            <Grid item xs={16} md={8} display="flex" alignItems="center">
-              <InputLabel sx={{ fontWeight: "bold", flexGrow: 1 }}>
+          <Grid item xs={12} md={6}>
+            <Box display="flex" alignItems="center" gap="20px">
+              <Typography color="initial" sx={{ fontWeight: "bold" }}>
                 CC:
-              </InputLabel>
+              </Typography>
               <TextField
                 label="abc@xyz.com"
                 required
@@ -178,13 +153,16 @@ const Index = () => {
                 size="small"
                 error={!!errors.cc}
                 helperText={errors.cc}
-                sx={{ flexGrow: 15 }}
+                fullWidth
               />
-            </Grid>
-            <Grid item xs={16} md={8} display="flex" alignItems="center">
-              <InputLabel sx={{ fontWeight: "bold", flexGrow: 1 }}>
-                TC:
-              </InputLabel>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <Box display="flex" alignItems="center" gap="20px">
+              <Typography color="initial" sx={{ fontWeight: "bold" }}>
+                BCC:
+              </Typography>
               <TextField
                 label="abc@xyz.com"
                 required
@@ -195,30 +173,32 @@ const Index = () => {
                 size="small"
                 error={!!errors.bcc}
                 helperText={errors.bcc}
-                sx={{ flexGrow: 15 }}
+                fullWidth
               />
-            </Grid>
+            </Box>
           </Grid>
 
-          <Grid item xs={16} md={8} display="flex" alignItems="center">
-            <InputLabel sx={{ fontWeight: "bold", flexGrow: 1 }}>
-              Subject:
-            </InputLabel>
-            <TextField
-              label="Subject"
-              type="text"
-              required
-              value={form.subject}
-              onChange={handleFormChange}
-              name="subject"
-              size="small"
-              error={!!errors.subject}
-              helperText={errors.subject}
-              sx={{ flexGrow: 15 }}
-            />
+          <Grid item xs={12} md={12}>
+            <Box display="flex" alignItems="center" gap="20px">
+              <Typography color="initial" sx={{ fontWeight: "bold" }}>
+                Subject:
+              </Typography>
+              <TextField
+                label="Subject"
+                type="text"
+                required
+                value={form.subject}
+                onChange={handleFormChange}
+                name="subject"
+                size="small"
+                error={!!errors.subject}
+                helperText={errors.subject}
+                fullWidth
+              />
+            </Box>
           </Grid>
 
-          <Grid item xs={16} md={16}>
+          <Grid item xs={12}>
             <ButtonGroups
               {...{ setAlignment, setDirection, setStyle, setText }}
             />
@@ -228,9 +208,9 @@ const Index = () => {
               rows={10}
               variant="outlined"
               fullWidth
-              value={text}
+              value={form.body}
               name="body"
-              onChange={handleChange}
+              onChange={handleFormChange}
               error={!!errors.body}
               helperText={errors.body}
               sx={{ ...style, textAlign: alignment, direction }}

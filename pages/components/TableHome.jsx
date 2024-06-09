@@ -43,7 +43,7 @@ const TableHome = ({ latestSixLogs }) => {
                   "&:last-child td, &:last-child th": { border: 0 },
                 }}
               >
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" sx={{ pr: 10 }}>
                   {log.contact}
                 </TableCell>
                 <TableCell align="center">{formattedDate}</TableCell>

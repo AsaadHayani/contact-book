@@ -1,5 +1,4 @@
 import { Card, Container, Typography } from "@mui/material";
-import Image from "next/image";
 import React from "react";
 import Title from "../components/Title";
 import TablePrint from "./TablePrint";

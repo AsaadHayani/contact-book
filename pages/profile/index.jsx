@@ -1,9 +1,6 @@
-import React from "react";
-import Title from "../components/Title";
-import Navbar from "../components/Navbar";
+import React, { useEffect, useState } from "react";
 import FullCard from "../components/FullCard";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import Image from "next/image";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { EditOffOutlined } from "@mui/icons-material";
 import Path from "../components/Path";
 import { useRouter } from "next/router";
@@ -32,6 +29,12 @@ const Index = () => {
     queryFn: () => fetchProfile(),
     queryKey: ["company"],
   });
+
+  const [userRole, setUserRole] = useState("User");
+  useEffect(() => {
+    setUserRole(cookie.get("role"));
+  }, [cookie.get("role")]);
+
   return (
     <>
       {isPending && <Loading open={isPending} />}
@@ -87,14 +90,6 @@ const Index = () => {
                 {profile?.zip}
               </Typography>
             </Box>
-            <Button
-              variant="outlined"
-              sx={{ width: "120px", display: { xs: "none", md: "flex" } }}
-              startIcon={<EditOffOutlined sx={{ fontSize: "18px" }} />}
-              onClick={() => router.push(`/profile/edit`)}
-            >
-              Edit
-            </Button>
           </Grid>
 
           <Grid item xs={12} sm={8} md={4}>
@@ -151,25 +146,24 @@ const Index = () => {
               referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
           </Grid>
+        </Grid>
 
-          <Box
-            sx={{
-              display: { xs: "block", md: "none" },
-              textAlign: "center",
-              mt: "20px",
-              width: "100%",
-            }}
-          >
+        {userRole === "Owner" && (
+          <Box textAlign="center" mt={{ xs: "10px", md: "0" }}>
             <Button
               variant="outlined"
-              sx={{ width: "120px" }}
+              sx={{
+                px: "30px",
+                textTransform: "none",
+                display: { md: "flex" },
+              }}
               startIcon={<EditOffOutlined sx={{ fontSize: "18px" }} />}
               onClick={() => router.push(`/profile/edit`)}
             >
               Edit
             </Button>
           </Box>
-        </Grid>
+        )}
       </FullCard>
     </>
   );

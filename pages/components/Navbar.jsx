@@ -8,7 +8,7 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import TemporaryDrawer from "./TemporaryDrawer";
 import {
@@ -28,8 +28,9 @@ const Navbar = () => {
   const cookie = new Cookies();
 
   const handleLogout = () => {
+    cookie.remove("role");
     cookie.remove("Bearer");
-    window.location.pathname = "/";
+    window.location.pathname = "/login";
   };
   const pages = [
     { text: "Home", link: "", icon: <Home /> },
@@ -74,7 +75,6 @@ const Navbar = () => {
               open={open}
               toggleDrawer={toggleDrawer}
               pages={pages}
-              role={currentUser?.role}
               handleLogout={handleLogout}
             />
           </Box>
@@ -108,9 +108,7 @@ const Navbar = () => {
                   textDecoration: "none",
                 }}
               >
-                {currentUser?.role === "Owners" && page.text === "Users"
-                  ? null
-                  : page.text}
+                {page.text}
               </Link>
             ))}
           </Box>
@@ -132,7 +130,7 @@ const Navbar = () => {
                 textTransform={"capitalize"}
               >
                 {currentUser?.firstName == undefined
-                  ? "User not Found"
+                  ? "- User -"
                   : `${currentUser?.firstName} ${currentUser?.lastName}`}
               </Typography>
             </Button>
@@ -154,7 +152,7 @@ const Navbar = () => {
             >
               <MenuItem onClick={handleCloseUserMenu}>
                 <Link
-                  href="/users/details"
+                  href={`/users/${currentUser?.id}`}
                   style={{ textDecoration: "none", color: "unset" }}
                 >
                   My Profile

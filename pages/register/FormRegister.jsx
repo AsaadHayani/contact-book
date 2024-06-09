@@ -300,9 +300,9 @@ const FormRegister = () => {
               defaultValue={form.country}
               onChange={handleFormChange}
             >
-              <MenuItem value={"10"}>Ten</MenuItem>
-              <MenuItem value={"20"}>Twenty</MenuItem>
-              <MenuItem value={"30"}>Thirty</MenuItem>
+              <MenuItem value="Syria">Syria</MenuItem>
+              <MenuItem value="Egypt">Egypt</MenuItem>
+              <MenuItem value="KSA">KSA</MenuItem>
             </Select>
           </FormControl>
         </Grid>

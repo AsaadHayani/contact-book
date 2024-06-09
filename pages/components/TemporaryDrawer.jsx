@@ -15,7 +15,6 @@ export default function TemporaryDrawer({
   open,
   toggleDrawer,
   pages,
-  role,
   handleLogout,
 }) {
   const router = useRouter();
@@ -27,7 +26,7 @@ export default function TemporaryDrawer({
       <Divider />
       <List>
         {pages.map((item, index) => {
-          return role === "Owner" && item.text === "Users" ? null : (
+          return (
             <div key={index}>
               <ListItem
                 disablePadding

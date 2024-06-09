@@ -41,8 +41,9 @@ const DetailsUser = () => {
   const switchElement = (checked) => {
     return (
       <FormControlLabel
-        control={<Switch checked={checked === "Admin" ? true : false} />}
-        label={checked === "Admin" ? "Locked" : "Unlocked"}
+        label={checked === "Active" ? "Active" : "Locked"}
+        labelPlacement="start"
+        control={<Switch checked={checked === "Active" ? true : false} />}
       />
     );
   };
@@ -54,7 +55,7 @@ const DetailsUser = () => {
 
       <Path title="User Details" path="Home / Users / Details" />
 
-      <FullCard title="User Details" element={switchElement(user?.role)}>
+      <FullCard title="User Details" element={switchElement(user?.status)}>
         <Grid container spacing={2} columns={16} mb="20px">
           <Grid item xs={16} md={8}>
             <Box mb="10px">
@@ -110,14 +111,17 @@ const DetailsUser = () => {
           </Grid>
         </Grid>
         <Box display="flex" columnGap="20px" mt="20px">
-          <Button
-            variant="outlined"
-            sx={{ width: "120px", textTransform: "none" }}
-            startIcon={<EditOffOutlined sx={{ fontSize: "18px" }} />}
-            onClick={() => router.push(`/users/edit/${user?.id}`)}
-          >
-            Edit
-          </Button>
+          {(cookie.get("role") === "Admin" && user.role === "User") ||
+            (cookie.get("role") === "Owner" && (
+              <Button
+                variant="outlined"
+                sx={{ width: "120px", textTransform: "none" }}
+                startIcon={<EditOffOutlined sx={{ fontSize: "18px" }} />}
+                onClick={() => router.push(`/users/edit/${user?.id}`)}
+              >
+                Edit
+              </Button>
+            ))}
           <Button
             variant="outlined"
             sx={{ width: "120px", textTransform: "none" }}
