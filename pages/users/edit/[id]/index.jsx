@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 import Cookies from "universal-cookie";
-import { axiosInstance } from "@/pages/components/api";
+import { axiosInstance } from "@/pages/api/api";
 import Path from "@/pages/components/Path";
 import Loading from "@/pages/components/Loading";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

@@ -21,7 +21,6 @@ import {
 import Cookies from "universal-cookie";
 import { axiosInstance } from "../api/api";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
 
 const Navbar = () => {
   const [open, setOpen] = React.useState(false);
@@ -72,12 +71,7 @@ const Navbar = () => {
       <Container>
         <Toolbar disableGutters>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <TemporaryDrawer
-              open={open}
-              toggleDrawer={toggleDrawer}
-              pages={pages}
-              handleLogout={handleLogout}
-            />
+            <TemporaryDrawer {...{ open, handleLogout, pages, toggleDrawer }} />
           </Box>
 
           <Box
