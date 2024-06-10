@@ -19,7 +19,7 @@ import {
   Person,
 } from "@mui/icons-material";
 import Cookies from "universal-cookie";
-import { axiosInstance } from "./api";
+import { axiosInstance } from "../api/api";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 

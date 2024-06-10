@@ -17,7 +17,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Loading from "../components/Loading";
-import { axiosInstance } from "../components/api";
+import { axiosInstance } from "../api/api";
 import { grey } from "@mui/material/colors";
 import { useMutation } from "@tanstack/react-query";
 import Cookies from "universal-cookie";

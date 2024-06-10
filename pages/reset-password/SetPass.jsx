@@ -1,7 +1,7 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Button, IconButton, InputAdornment, TextField } from "@mui/material";
 import React, { useState } from "react";
-import { axiosInstance } from "../components/api";
+import { axiosInstance } from "../api/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Loading from "../components/Loading";
 import Error from "../components/Error";

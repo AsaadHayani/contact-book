@@ -11,7 +11,7 @@ import {
 import TopTableUsers from "../components/TopTableUsers";
 import Path from "../components/Path";
 import { useRouter } from "next/router";
-import { axiosInstance } from "../components/api";
+import { axiosInstance } from "../api/api";
 import Cookies from "universal-cookie";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Loading from "../components/Loading";

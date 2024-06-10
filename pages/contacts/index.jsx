@@ -10,7 +10,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Path from "../components/Path";
-import { axiosInstance } from "../components/api";
+import { axiosInstance } from "../api/api";
 import Cookies from "universal-cookie";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Loading from "../components/Loading";

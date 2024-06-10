@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import { axiosInstance } from "../components/api";
+import { axiosInstance } from "../api/api";
 import Cookies from "universal-cookie";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../components/Loading";
