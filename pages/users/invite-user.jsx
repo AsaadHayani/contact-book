@@ -90,7 +90,7 @@ const InviteUser = () => {
   return (
     <>
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
       <Path title="Invite User" path="Home / Users / Invite new user" />
 
       <FullCard title="User details">

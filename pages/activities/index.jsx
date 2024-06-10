@@ -52,7 +52,7 @@ export default function Activities() {
   return (
     <>
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
 
       <Path title="Activities" path="Home / Activities" />
       <Container>

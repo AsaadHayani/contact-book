@@ -1,6 +1,7 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import React from "react";
 import FooterAuth from "./FooterAuth";
+import Image from "next/image";
 
 const LayoutAuth = ({ children, title }) => {
   return (

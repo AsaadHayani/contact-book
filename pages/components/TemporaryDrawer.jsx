@@ -10,6 +10,7 @@ import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 export default function TemporaryDrawer({
   open,
@@ -21,7 +22,7 @@ export default function TemporaryDrawer({
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <Box bgcolor="primary.main" textAlign="center" py="10px">
-        <img src="/images/Logo_White.svg" />
+        <img alt="" src="/images/Logo_White.svg" />
       </Box>
       <Divider />
       <List>

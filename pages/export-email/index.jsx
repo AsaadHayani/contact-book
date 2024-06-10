@@ -115,7 +115,7 @@ const Index = () => {
     <>
       {isPendingFavorite && <Loading open={isPendingFavorite} />}
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
       <Path title="Export Email" path="Home / Contacts / Export Email" />
 
       <Container>

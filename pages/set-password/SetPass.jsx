@@ -53,7 +53,7 @@ const SetPass = () => {
   return (
     <>
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
       <TextField
         label="Password"
         type={showPassword ? "text" : "password"}

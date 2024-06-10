@@ -51,7 +51,7 @@ const DetailsUser = () => {
   return (
     <>
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
 
       <Path title="User Details" path="Home / Users / Details" />
 

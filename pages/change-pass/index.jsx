@@ -7,7 +7,9 @@ const Index = () => {
   return (
     <>
       <Title title="Change Password" />
-      <LayoutAuth children={<ChangePass />} title="Change Password" />
+      <LayoutAuth title="Change Password">
+        <ChangePass />
+      </LayoutAuth>
     </>
   );
 };

@@ -16,6 +16,7 @@ import axiosInstance from "../../components/api";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
 import Error from "@/pages/components/Error";
+import Image from "next/image";
 
 const Details = () => {
   const router = useRouter();
@@ -51,7 +52,7 @@ const Details = () => {
   return (
     <>
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
       <Path title="Contact details" path="Home / Contacts / Ricardo" />
 
       <FullCard
@@ -66,6 +67,7 @@ const Details = () => {
         >
           <Grid item xs={12} md={4}>
             <img
+              alt=""
               src={
                 contact?.image != ""
                   ? "/images/Placeholder.jpg"

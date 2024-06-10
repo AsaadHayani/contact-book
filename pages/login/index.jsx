@@ -6,7 +6,9 @@ const Index = () => {
   return (
     <>
       <Title title="Sign In" />
-      <LayoutAuth children={<FormLogin />} title="Sign In" />
+      <LayoutAuth title="Sign In">
+        <FormLogin />
+      </LayoutAuth>
     </>
   );
 };

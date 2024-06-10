@@ -13,6 +13,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import Image from "next/image";
 import React from "react";
 
 const TableMD = ({
@@ -45,10 +46,10 @@ const TableMD = ({
               <Checkbox
                 color="primary"
                 indeterminate={
-                  selected.length > 0 && selected.length < contacts?.length
+                  selected?.length > 0 && selected?.length < contacts?.length
                 }
                 checked={
-                  contacts?.length > 0 && selected.length === contacts?.length
+                  contacts?.length > 0 && selected?.length === contacts?.length
                 }
                 onChange={handleSelectAllClick}
               />

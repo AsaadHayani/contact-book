@@ -13,6 +13,7 @@ import Cookies from "universal-cookie";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../components/Loading";
 import Error from "../components/Error";
+import Image from "next/image";
 
 const headCells = ["ID", "Image", "First Name", "Last Name", "Email", "Phone"];
 
@@ -37,7 +38,7 @@ const TablePrint = () => {
   return (
     <>
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
       <Box sx={{ width: "100%", my: 5 }}>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 100 }} size="small" aria-label="a dense table">

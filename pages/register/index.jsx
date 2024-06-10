@@ -3,6 +3,7 @@ import FormRegister from "./FormRegister";
 import Title from "../components/Title";
 import { Box, Container, Grid, Typography } from "@mui/material";
 import FooterAuth from "../components/FooterAuth";
+import Image from "next/image";
 
 const Index = () => {
   return (

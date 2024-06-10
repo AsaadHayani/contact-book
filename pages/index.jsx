@@ -72,7 +72,7 @@ export default function Home() {
   return (
     <>
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
       <Path title="Home" path="Statistical Dashboard" />
 
       <Container>

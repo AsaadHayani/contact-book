@@ -84,7 +84,7 @@ const Index = () => {
   return (
     <>
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
       <Path title="Send Email" path="Home / Contacts / Send Email" />
 
       <Container component="form">

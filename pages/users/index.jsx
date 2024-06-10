@@ -122,7 +122,7 @@ const Index = () => {
     <>
       {isPendingDelete && <Loading open={isPendingDelete} />}
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
       <Path title="Users" path="Home / Users" />
 
       <Container>

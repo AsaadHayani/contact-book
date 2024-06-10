@@ -21,6 +21,7 @@ import {
 import Cookies from "universal-cookie";
 import axiosInstance from "./api";
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 
 const Navbar = () => {
   const [open, setOpen] = React.useState(false);
@@ -87,7 +88,7 @@ const Navbar = () => {
             }}
           >
             <Link href="/">
-              <img src="/images/Logo_White.svg" />
+              <img alt="" src="/images/Logo_White.svg" />
             </Link>
           </Box>
 

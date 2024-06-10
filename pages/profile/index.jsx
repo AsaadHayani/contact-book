@@ -38,7 +38,7 @@ const Index = () => {
   return (
     <>
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
 
       <Path title="Company Profile" path="Home / Company Profile" />
 

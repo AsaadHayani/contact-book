@@ -43,9 +43,11 @@ const TableMD = ({
               <Checkbox
                 color="primary"
                 indeterminate={
-                  selected.length > 0 && selected.length < users?.length
+                  selected?.length > 0 && selected?.length < users?.length
                 }
-                checked={users?.length > 0 && selected.length === users?.length}
+                checked={
+                  users?.length > 0 && selected?.length === users?.length
+                }
                 onChange={handleSelectAllClick}
               />
             </TableCell>

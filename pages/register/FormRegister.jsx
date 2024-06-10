@@ -123,7 +123,7 @@ const FormRegister = () => {
   return (
     <>
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
       <Typography variant="h5" color={grey[700]}>
         Account details
       </Typography>

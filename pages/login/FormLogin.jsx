@@ -76,7 +76,7 @@ const FormLogin = () => {
   return (
     <>
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
       <Box display="flex" flexDirection="column" rowGap="10px">
         <TextField
           label="Email"
@@ -139,9 +139,7 @@ const FormLogin = () => {
             borderColor: grey[700],
           }}
         />
-        <Typography sx={{ textAlign: "center" }}>
-          Don't have account?
-        </Typography>
+        <Typography sx={{ textAlign: "center" }}>Dont have account?</Typography>
         <Divider
           sx={{
             position: "absolute",

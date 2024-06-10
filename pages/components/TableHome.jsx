@@ -30,7 +30,7 @@ const TableHome = ({ latestSixLogs }) => {
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
         <TableBody>
-          {latestSixLogs.map((log) => {
+          {latestSixLogs?.map((log) => {
             const date = new Date(log.timestamp);
             const day = String(date.getDate()).padStart(2, "0");
             const month = months[date.getMonth()];

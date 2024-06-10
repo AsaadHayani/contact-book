@@ -6,6 +6,7 @@ import Path from "@/pages/components/Path";
 import FullCard from "@/pages/components/FullCard";
 import axiosInstance from "@/pages/components/api";
 import Loading from "@/pages/components/Loading";
+import Error from "@/pages/components/Error";
 
 const Edit = () => {
   const cookie = new Cookies();
@@ -77,7 +78,7 @@ const Edit = () => {
     <>
       {isPendingPage && <Loading open={isPendingPage} />}
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
 
       <Path title="Contact details" path="Home / Contacts / Ricardo" />
 

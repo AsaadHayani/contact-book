@@ -42,7 +42,7 @@ const ChangePass = () => {
   return (
     <>
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
 
       <TextField
         label="Enter your email address"

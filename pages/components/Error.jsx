@@ -5,7 +5,7 @@ const Error = ({ error }) => {
   return (
     <Snackbar open={error} autoHideDuration={3000}>
       <Alert variant="filled" severity="error">
-        {error.message}
+        {error}
       </Alert>
     </Snackbar>
   );

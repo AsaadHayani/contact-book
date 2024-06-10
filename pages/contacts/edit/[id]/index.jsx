@@ -19,6 +19,7 @@ import axiosInstance from "@/pages/components/api";
 import { grey } from "@mui/material/colors";
 import Loading from "@/pages/components/Loading";
 import Error from "@/pages/components/Error";
+import Image from "next/image";
 
 const Edit = () => {
   const router = useRouter();
@@ -131,7 +132,7 @@ const Edit = () => {
       {isPending && <Loading open={isPending} />}
       {isErrorPage && <Error error={errorPage} />}
       {isLoading && <Loading open={isLoading} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
       <Path title="Contact details" path="Home / Contacts / Ricardo" />
 
       <Container>
@@ -167,6 +168,7 @@ const Edit = () => {
           >
             <Grid item xs={12} md={4}>
               <img
+                alt=""
                 src={
                   contact?.image != ""
                     ? "/images/Placeholder.jpg"

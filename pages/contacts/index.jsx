@@ -145,7 +145,7 @@ const Index = () => {
       {isPendingDelete && <Loading open={isPendingDelete} />}
       {isPendingFavorite && <Loading open={isPendingFavorite} />}
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
 
       <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
         <Alert

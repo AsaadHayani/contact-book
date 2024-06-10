@@ -130,7 +130,7 @@ const Edit = () => {
       {isPending && <Loading open={isPending} />}
       {isErrorPage && <Error error={errorPage} />}
       {isLoading && <Loading open={isLoading} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
       <Path title="User Edit" path="Home / Users / Edit" />
 
       <Container>

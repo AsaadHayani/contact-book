@@ -94,7 +94,7 @@ const Create = () => {
   return (
     <>
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error} />}
+      {isError && <Error error={error.message} />}
       <Path title="Contact details" path="Home / Contacts / Create New" />
 
       <FullCard title="Contact details">
@@ -106,6 +106,7 @@ const Create = () => {
         >
           <Grid item xs={12} md={4}>
             <img
+              alt=""
               src={image}
               width={200}
               height={200}
