@@ -1,7 +1,7 @@
 import { Button, TextField } from "@mui/material";
 import Link from "next/link";
 import React, { useState } from "react";
-import axiosInstance from "../components/api";
+import { axiosInstance } from "../components/api";
 import Loading from "../components/Loading";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Error from "../components/Error";

@@ -12,7 +12,7 @@ import { EditOffOutlined } from "@mui/icons-material";
 import Path from "../../components/Path";
 import { useRouter } from "next/router";
 import Cookies from "universal-cookie";
-import axiosInstance from "../../components/api";
+import { axiosInstance } from "../../components/api";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
 import Error from "@/pages/components/Error";

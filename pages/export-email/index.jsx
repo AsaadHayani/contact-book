@@ -18,7 +18,7 @@ import TopTableExportEmail from "../components/TopTableExportEmail";
 import Path from "../components/Path";
 import { useRouter } from "next/router";
 import Cookies from "universal-cookie";
-import axiosInstance from "../components/api";
+import { axiosInstance } from "../components/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Loading from "../components/Loading";
 import Error from "../components/Error";

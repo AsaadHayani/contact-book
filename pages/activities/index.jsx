@@ -13,7 +13,7 @@ import {
   Pagination,
 } from "@mui/material";
 import Path from "../components/Path";
-import axiosInstance from "../components/api";
+import { axiosInstance } from "../components/api";
 import Cookies from "universal-cookie";
 import { useQuery } from "@tanstack/react-query";
 import ColoredBullet from "../components/ColoredBullet";

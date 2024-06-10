@@ -14,7 +14,7 @@ import { grey } from "@mui/material/colors";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import axiosInstance from "../components/api";
+import { axiosInstance } from "../components/api";
 import Cookies from "universal-cookie";
 import Loading from "../components/Loading";
 import { useMutation } from "@tanstack/react-query";

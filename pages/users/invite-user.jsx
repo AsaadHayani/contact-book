@@ -15,7 +15,7 @@ import Path from "../components/Path";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Cookies from "universal-cookie";
 import { useRouter } from "next/router";
-import axiosInstance from "../components/api";
+import { axiosInstance } from "../components/api";
 import Loading from "../components/Loading";
 import Error from "../components/Error";
 

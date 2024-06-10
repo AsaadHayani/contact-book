@@ -12,12 +12,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
-export default function TemporaryDrawer({
-  open,
-  toggleDrawer,
-  pages,
-  handleLogout,
-}) {
+function TemporaryDrawer({ open, toggleDrawer, pages, handleLogout }) {
   const router = useRouter();
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
@@ -96,3 +91,4 @@ export default function TemporaryDrawer({
     </>
   );
 }
+export default TemporaryDrawer;

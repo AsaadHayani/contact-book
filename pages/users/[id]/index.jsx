@@ -11,7 +11,7 @@ import {
 import { EditOffOutlined } from "@mui/icons-material";
 import Path from "../../components/Path";
 import { useRouter } from "next/router";
-import axiosInstance from "@/pages/components/api";
+import { axiosInstance } from "@/pages/components/api";
 import Cookies from "universal-cookie";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "@/pages/components/Loading";

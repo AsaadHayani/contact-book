@@ -4,7 +4,7 @@ import Cookies from "universal-cookie";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Path from "@/pages/components/Path";
 import FullCard from "@/pages/components/FullCard";
-import axiosInstance from "@/pages/components/api";
+import { axiosInstance } from "@/pages/components/api";
 import Loading from "@/pages/components/Loading";
 import Error from "@/pages/components/Error";
 

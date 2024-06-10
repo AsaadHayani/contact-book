@@ -9,7 +9,7 @@ import {
 import Path from "./components/Path";
 import Link from "next/link";
 import { useTheme } from "@emotion/react";
-import axiosInstance from "./components/api";
+import { axiosInstance } from "./components/api";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "./components/Loading";
 import Cookies from "universal-cookie";
