@@ -12,58 +12,53 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
-function TemporaryDrawer({ open, toggleDrawer, pages, handleLogout }) {
+const TemporaryDrawers = ({ open, toggleDrawer, pages, handleLogout }) => {
   const router = useRouter();
+
+  const handleNavigation = (link) => {
+    router.push(`/${link}`);
+  };
+
   const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+    <Box
+      sx={{ width: 250 }}
+      role="presentation"
+      onClick={() => toggleDrawer(false)}
+    >
       <Box bgcolor="primary.main" textAlign="center" py="10px">
-        <img alt="" src="/images/Logo_White.svg" />
+        <img alt="Logo" src="/images/Logo_White.svg" />
       </Box>
       <Divider />
       <List>
-        {pages.map((item, index) => {
-          return (
-            <div key={index}>
-              <ListItem
-                disablePadding
-                sx={{
-                  bgcolor: router.asPath === `/${item.link}` ? "#aaa" : null,
-                }}
-              >
-                <ListItemButton
-                  onClick={() => {
-                    router.push(`/${item.link}`);
-                  }}
-                >
-                  <ListItemText primary={item.text} />
-                </ListItemButton>
-              </ListItem>
-              <Divider />
-            </div>
-          );
-        })}
+        {pages?.map((item, index) => (
+          <div key={index}>
+            <ListItem
+              disablePadding
+              sx={{
+                bgcolor: router.asPath === `/${item.link}` ? "#aaa" : null,
+              }}
+            >
+              <ListItemButton onClick={() => handleNavigation(item.link)}>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+            <Divider />
+          </div>
+        ))}
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemText primary="Username" />
           </ListItemButton>
         </ListItem>
         <Divider />
-
-        <Link
-          href={`/profile`}
-          style={{
-            textDecoration: "none",
-            color: "unset",
-          }}
-        >
+        <Link href="/profile" passHref>
           <ListItem disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemText primary="My Profile" />
             </ListItemButton>
           </ListItem>
-          <Divider />
         </Link>
-
+        <Divider />
         <ListItem disablePadding>
           <ListItemButton sx={{ pl: 4 }} onClick={handleLogout}>
             <ListItemText primary="Logout" />
@@ -80,15 +75,15 @@ function TemporaryDrawer({ open, toggleDrawer, pages, handleLogout }) {
         aria-label="account of current user"
         aria-controls="menu-appbar"
         aria-haspopup="true"
-        onClick={toggleDrawer(true)}
+        onClick={() => toggleDrawer(true)}
         color="inherit"
       >
         <MenuIcon />
       </IconButton>
-      <Drawer open={open} onClose={toggleDrawer(false)}>
+      <Drawer open={open} onClose={() => toggleDrawer(false)}>
         {DrawerList}
       </Drawer>
     </>
   );
-}
-export default TemporaryDrawer;
+};
+export default TemporaryDrawers;

@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import Link from "next/link";
-import TemporaryDrawer from "./TemporaryDrawer";
+import TemporaryDrawers from "./TemporaryDrawers";
 import {
   ContactEmergency,
   Home,
@@ -71,7 +71,9 @@ const Navbar = () => {
       <Container>
         <Toolbar disableGutters>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <TemporaryDrawer {...{ open, handleLogout, pages, toggleDrawer }} />
+            <TemporaryDrawers
+              {...{ open, handleLogout, pages, toggleDrawer }}
+            />
           </Box>
 
           <Box
