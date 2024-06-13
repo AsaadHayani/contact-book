@@ -19,20 +19,20 @@ const TopTableContacts = ({ handleDelete, isPendingDelete }) => {
     <Grid
       container
       spacing={2}
-      alignItems="center"
+      columns={16}
       mb="10px"
       flexDirection={{ xs: "column-reverse", md: "row" }}
     >
-      <Grid item xs={12} md={4}>
+      <Grid item xs={16} sm={16} md={4}>
         <TextField
           type="search"
           label="Search"
-          size="small"
           fullWidth
           sx={{ bgcolor: "white" }}
+          size="small"
         />
       </Grid>
-      <Grid item xs={12} md={8}>
+      <Grid item xs={16} md={12}>
         <Grid container spacing={2}>
           {cookie.get("role") !== "User" && (
             <Grid item xs={6} sm={6} md={3}>

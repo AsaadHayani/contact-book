@@ -120,7 +120,7 @@ const Index = () => {
         <Grid container spacing={2} sx={{ bgcolor: "white" }}>
           <Grid item xs={12} md={12}>
             <Box display="flex" alignItems="center" gap="20px">
-              <Typography color="initial" sx={{ fontWeight: "bold" }}>
+              <Typography color="grey" sx={{ fontWeight: "bold" }}>
                 To:
               </Typography>
               <TextField
@@ -140,7 +140,7 @@ const Index = () => {
 
           <Grid item xs={12} md={6}>
             <Box display="flex" alignItems="center" gap="20px">
-              <Typography color="initial" sx={{ fontWeight: "bold" }}>
+              <Typography color="grey" sx={{ fontWeight: "bold" }}>
                 CC:
               </Typography>
               <TextField
@@ -160,7 +160,7 @@ const Index = () => {
 
           <Grid item xs={12} md={6}>
             <Box display="flex" alignItems="center" gap="20px">
-              <Typography color="initial" sx={{ fontWeight: "bold" }}>
+              <Typography color="grey" sx={{ fontWeight: "bold" }}>
                 BCC:
               </Typography>
               <TextField
@@ -180,7 +180,7 @@ const Index = () => {
 
           <Grid item xs={12} md={12}>
             <Box display="flex" alignItems="center" gap="20px">
-              <Typography color="initial" sx={{ fontWeight: "bold" }}>
+              <Typography color="grey" sx={{ fontWeight: "bold" }}>
                 Subject:
               </Typography>
               <TextField

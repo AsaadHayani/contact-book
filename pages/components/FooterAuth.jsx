@@ -3,7 +3,7 @@ import React from "react";
 
 const FooterAuth = () => {
   return (
-    <Box sx={{ mt: "auto", position: "absolute", bottom: "0" }}>
+    <Box sx={{ mt: "auto", position: "absolute", bottom: "10px" }}>
       <Divider />
       <Container>
         <Box
@@ -15,9 +15,6 @@ const FooterAuth = () => {
         >
           <Typography variant="body1" color="grey" fontSize={12}>
             Copyright © ITM Development | Contact Book | 2022
-          </Typography>
-          <Typography variant="body1" color="grey" fontSize={12}>
-            Privacy Policy - Terms & Conditions
           </Typography>
         </Box>
       </Container>

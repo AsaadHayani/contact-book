@@ -60,7 +60,7 @@ const Create = () => {
     return response.data;
   };
 
-  const [errorEmail, setErrorEmail] = useState(false);
+  const [errorEmail, setErrorEmail] = useState("");
 
   const queryClient = useQueryClient();
   const { mutate, isPending, isError, error } = useMutation({
@@ -70,8 +70,9 @@ const Create = () => {
       router.push(`/contacts`);
     },
     onError: (error) => {
+      console.log(error);
       if (error.response.data) {
-        setErrorEmail(true);
+        setErrorEmail(error.response.data);
       }
     },
   });
@@ -94,7 +95,7 @@ const Create = () => {
   return (
     <>
       {isPending && <Loading open={isPending} />}
-      {isError && <Error error={error.message} />}
+      {isError && <Error error={errorEmail} />}
       <Path title="Contact details" path="Home / Contacts / Create New" />
 
       <FullCard title="Contact details">

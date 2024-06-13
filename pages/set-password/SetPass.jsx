@@ -16,7 +16,7 @@ const SetPass = () => {
 
   const handleSetPassword = async () => {
     const response = await axiosInstance.post(
-      `reset-password?id=${id}&code=${code}`,
+      `set-password?id=${id}&code=${code}`,
       { password }
     );
     return response.data;
@@ -25,7 +25,7 @@ const SetPass = () => {
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: handleSetPassword,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reset-password"] });
+      queryClient.invalidateQueries({ queryKey: ["set-password"] });
       router.push(`/login`);
     },
   });

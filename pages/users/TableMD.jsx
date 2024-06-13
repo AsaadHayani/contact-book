@@ -22,6 +22,7 @@ const TableMD = ({
   handleClick,
   selected,
   handleSelectAllClick,
+  handleCopyEmail,
 }) => {
   const headCells = [
     "ID",
@@ -89,11 +90,12 @@ const TableMD = ({
                     <TableCell align="center">
                       <Alert
                         icon={false}
+                        sx={{ justifyContent: "center" }}
                         severity={
                           user.status === "Pending"
                             ? "warning"
                             : user.status === "Active"
-                            ? "error"
+                            ? "success"
                             : user.status === "Locked"
                             ? "info"
                             : "cyan"

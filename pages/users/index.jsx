@@ -39,7 +39,6 @@ const Index = () => {
   });
 
   const [selected, setSelected] = React.useState([]);
-  const router = useRouter();
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
@@ -140,7 +139,15 @@ const Index = () => {
                 }}
               />
             ) : (
-              <TableMD {...{ users, isSelected, handleClick, selected }} />
+              <TableMD
+                {...{
+                  users,
+                  isSelected,
+                  handleCopyEmail,
+                  handleClick,
+                  selected,
+                }}
+              />
             )}
             <Pagination count={10} color="primary" shape="rounded" />
             <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>

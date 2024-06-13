@@ -57,7 +57,13 @@ const TableMD = ({
               />
             </TableCell>
             {headCells.map((title, i) => (
-              <TableCell key={i} sx={{ fontWeight: "bold" }}>
+              <TableCell
+                key={i}
+                align={title === "Email" ? "center" : ""}
+                sx={{
+                  fontWeight: "bold",
+                }}
+              >
                 {title}
               </TableCell>
             ))}
@@ -113,13 +119,9 @@ const TableMD = ({
                   <TableCell align="center">
                     <Alert
                       icon={false}
-                      severity={
-                        contact.status === "Active"
-                          ? "success"
-                          : contact.status === "Inactive"
-                          ? "warning"
-                          : "cyan"
-                      }
+                      sx={{ justifyContent: "center" }}
+                      className={contact.status === "Inactive" && "alert"}
+                      severity={contact.status === "Active" ? "success" : ""}
                     >
                       {contact.status}
                     </Alert>

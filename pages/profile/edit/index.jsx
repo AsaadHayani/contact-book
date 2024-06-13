@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import Cookies from "universal-cookie";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Path from "@/pages/components/Path";
@@ -7,10 +16,12 @@ import FullCard from "@/pages/components/FullCard";
 import { axiosInstance } from "@/pages/api/api";
 import Loading from "@/pages/components/Loading";
 import Error from "@/pages/components/Error";
+import { useRouter } from "next/router";
 
 const Edit = () => {
   const cookie = new Cookies();
   const token = cookie.get("Bearer");
+  const router = useRouter();
 
   const fetchContact = async () => {
     const response = await axiosInstance.get(`companies`, {
@@ -52,8 +63,8 @@ const Edit = () => {
   } = useMutation({
     mutationFn: editCompanies,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["contacts"] });
-      console.log("edit contact success");
+      queryClient.invalidateQueries({ queryKey: ["company"] });
+      console.log("edit company success");
       router.back();
     },
   });
@@ -202,19 +213,22 @@ const Edit = () => {
               />
             </Box>
             <Box mb="20px">
-              <Box mb="10px" textAlign="start">
-                <Typography variant="span" color="initial">
+              <Box mb="10px">
+                <Typography variant="body1" color="initial">
                   Country
                 </Typography>
               </Box>
-              <TextField
-                type="text"
-                value={form.country || ""}
-                name="country"
-                onChange={handleFormChange}
-                size="small"
-                fullWidth
-              />
+              <FormControl sx={{ minWidth: 220 }} size="small" fullWidth>
+                <Select
+                  onChange={handleFormChange}
+                  name="country"
+                  value={form.country || ""}
+                >
+                  <MenuItem value="Syria">Syria</MenuItem>
+                  <MenuItem value="KSA">KSA</MenuItem>
+                  <MenuItem value="Egypt">Egypt</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
             <Box gap="20px" sx={{ display: { xs: "flex", md: "none" } }}>
               <Button

@@ -92,27 +92,23 @@ const ButtonGroups = ({ setAlignment, setDirection, setStyle, setText }) => {
     },
   ];
 
-  return (
-    <Box display="flex" alignItems="center" columnGap="10px">
-      {buttonGroups.map((group, index) => (
-        <ButtonGroup
-          key={index}
-          variant="contained"
-          aria-label={group.label}
-          sx={{ mb: 1, bgcolor: "transparent", border: 1, borderColor: "#ddd" }}
-        >
-          {group.buttons.map((button, btnIndex) => (
-            <React.Fragment key={btnIndex}>
-              <IconButton onClick={button.onClick}>{button.icon}</IconButton>
-              {btnIndex < group.buttons.length - 1 && (
-                <Divider orientation="vertical" flexItem />
-              )}
-            </React.Fragment>
-          ))}
-        </ButtonGroup>
+  return buttonGroups.map((group, index) => (
+    <ButtonGroup
+      key={index}
+      variant="contained"
+      aria-label={group.label}
+      sx={{ mb: 1, bgcolor: "transparent", border: 1, borderColor: "#ddd" }}
+    >
+      {group.buttons.map((button, btnIndex) => (
+        <React.Fragment key={btnIndex}>
+          <IconButton onClick={button.onClick}>{button.icon}</IconButton>
+          {btnIndex < group.buttons.length - 1 && (
+            <Divider orientation="vertical" flexItem />
+          )}
+        </React.Fragment>
       ))}
-    </Box>
-  );
+    </ButtonGroup>
+  ));
 };
 
 export default ButtonGroups;

@@ -121,9 +121,13 @@ const Edit = () => {
       setErrors(newErrors);
     } else {
       mutate(form);
-      console.log(form);
     }
   };
+
+  const [userRole, setUserRole] = useState("User");
+  useEffect(() => {
+    setUserRole(cookie.get("role"));
+  }, [cookie.get("role")]);
 
   return (
     <>
@@ -246,7 +250,9 @@ const Edit = () => {
                   name="role"
                   value={form.role || ""}
                 >
-                  <MenuItem value="Owner">Owner</MenuItem>
+                  {userRole === "Owner" && (
+                    <MenuItem value="Owner">Owner</MenuItem>
+                  )}
                   <MenuItem value="Admin">Admin</MenuItem>
                   <MenuItem value="User">User</MenuItem>
                 </Select>
@@ -255,8 +261,8 @@ const Edit = () => {
           </Grid>
 
           <Box display="flex" columnGap="20px" mt="20px">
-            {(cookie.get("role") === "Admin" && user.role === "User") ||
-              (cookie.get("role") === "Owner" && (
+            {(userRole === "Admin" && user.role === "User") ||
+              (userRole === "Owner" && (
                 <Button
                   variant="contained"
                   sx={{ px: "30px", textTransform: "none" }}

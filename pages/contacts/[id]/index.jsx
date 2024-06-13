@@ -42,6 +42,7 @@ const Details = () => {
   const switchElement = (checked) => {
     return (
       <FormControlLabel
+        disabled
         label={checked === "Active" ? "Active" : "Inactive"}
         labelPlacement="start"
         control={<Switch checked={checked === "Active" ? true : false} />}

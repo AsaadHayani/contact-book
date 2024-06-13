@@ -108,7 +108,6 @@ const FormRegister = () => {
     if (!form.companyName) newErrors.companyName = "Field required";
     if (!form.state) newErrors.state = "Field required";
     if (!form.streetOne) newErrors.streetOne = "Field required";
-    if (!form.streetTwo) newErrors.streetTwo = "Field required";
     if (!form.country) newErrors.country = "Field required";
     if (!form.city) newErrors.city = "Field required";
     if (!form.vatNumber) newErrors.vatNumber = "Field required";
@@ -124,6 +123,14 @@ const FormRegister = () => {
     <>
       {isPending && <Loading open={isPending} />}
       {isError && <Error error={error.message} />}
+
+      <Typography
+        variant="h4"
+        fontWeight="bold"
+        sx={{ display: { xs: "none", md: "block" } }}
+      >
+        Create Account
+      </Typography>
       <Typography variant="h5" color={grey[700]}>
         Account details
       </Typography>
@@ -249,8 +256,6 @@ const FormRegister = () => {
             name="streetTwo"
             value={form.streetTwo}
             onChange={handleFormChange}
-            error={!!errors.streetTwo}
-            helperText={errors.streetTwo}
           />
         </Grid>
         <Grid item xs={8}>
@@ -311,7 +316,12 @@ const FormRegister = () => {
         control={<Checkbox />}
         label="I agree to the website terms and conditions"
       />
-      <Button variant="contained" type="submit" onClick={handleSubmit}>
+      <Button
+        variant="contained"
+        type="submit"
+        sx={{ textTransform: "none" }}
+        onClick={handleSubmit}
+      >
         Register
       </Button>
       <Link href={"/login"} style={{ textAlign: "center" }}>

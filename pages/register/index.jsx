@@ -9,12 +9,7 @@ const Index = () => {
   return (
     <>
       <Title title="Register" />
-      <Grid
-        container
-        columnSpacing={10}
-        columns={16}
-        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-      >
+      <Grid container columns={16}>
         <Grid
           item
           xs={16}
@@ -31,7 +26,6 @@ const Index = () => {
               height: "100vh",
               objectFit: "cover",
             }}
-            priority={`true`}
           />
           <FooterAuth />
         </Grid>
@@ -53,19 +47,13 @@ const Index = () => {
               />
             </Box>
 
-            <Typography
-              variant="h4"
-              fontWeight="bold"
-              sx={{ display: { xs: "none", md: "block" }, mb: "20px" }}
-            >
-              Create Account
-            </Typography>
-
             <Box
               component="form"
               display="flex"
               flexDirection="column"
               gap="20px"
+              justifyContent="center"
+              minHeight="100vh"
             >
               <FormRegister />
             </Box>

@@ -12,7 +12,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
-const TemporaryDrawers = ({ open, toggleDrawer, pages, handleLogout }) => {
+const TemporaryDrawers = ({
+  open,
+  setOpen,
+  pages,
+  handleLogout,
+  currentUser,
+}) => {
   const router = useRouter();
 
   const handleNavigation = (link) => {
@@ -20,11 +26,7 @@ const TemporaryDrawers = ({ open, toggleDrawer, pages, handleLogout }) => {
   };
 
   const DrawerList = (
-    <Box
-      sx={{ width: 250 }}
-      role="presentation"
-      onClick={() => toggleDrawer(false)}
-    >
+    <Box sx={{ width: 250 }} role="presentation" onClick={() => setOpen(false)}>
       <Box bgcolor="primary.main" textAlign="center" py="10px">
         <img alt="Logo" src="/images/Logo_White.svg" />
       </Box>
@@ -51,7 +53,11 @@ const TemporaryDrawers = ({ open, toggleDrawer, pages, handleLogout }) => {
           </ListItemButton>
         </ListItem>
         <Divider />
-        <Link href="/profile" passHref>
+
+        <Link
+          href={`/users/${currentUser?.id}`}
+          style={{ textDecoration: "none", color: "unset" }}
+        >
           <ListItem disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemText primary="My Profile" />
@@ -75,12 +81,12 @@ const TemporaryDrawers = ({ open, toggleDrawer, pages, handleLogout }) => {
         aria-label="account of current user"
         aria-controls="menu-appbar"
         aria-haspopup="true"
-        onClick={() => toggleDrawer(true)}
+        onClick={() => setOpen(true)}
         color="inherit"
       >
         <MenuIcon />
       </IconButton>
-      <Drawer open={open} onClose={() => toggleDrawer(false)}>
+      <Drawer open={open} onClose={() => setOpen(false)}>
         {DrawerList}
       </Drawer>
     </>

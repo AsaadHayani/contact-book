@@ -38,9 +38,6 @@ const Navbar = () => {
     { text: "Company Profile", link: "profile", icon: <LocationCity /> },
     { text: "Users", link: "users", icon: <PeopleAlt /> },
   ];
-  const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
-  };
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -72,7 +69,13 @@ const Navbar = () => {
         <Toolbar disableGutters>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <TemporaryDrawers
-              {...{ open, handleLogout, pages, toggleDrawer }}
+              {...{
+                open,
+                setOpen,
+                handleLogout,
+                pages,
+                currentUser,
+              }}
             />
           </Box>
 

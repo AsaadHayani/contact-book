@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FullCard from "../../components/FullCard";
 import {
   Box,
@@ -41,12 +41,18 @@ const DetailsUser = () => {
   const switchElement = (checked) => {
     return (
       <FormControlLabel
+        disabled
         label={checked === "Active" ? "Active" : "Locked"}
         labelPlacement="start"
         control={<Switch checked={checked === "Active" ? true : false} />}
       />
     );
   };
+
+  const [userRole, setUserRole] = useState("User");
+  useEffect(() => {
+    setUserRole(cookie.get("role"));
+  }, [cookie.get("role")]);
 
   return (
     <>
@@ -111,8 +117,8 @@ const DetailsUser = () => {
           </Grid>
         </Grid>
         <Box display="flex" columnGap="20px" mt="20px">
-          {(cookie.get("role") === "Admin" && user.role === "User") ||
-            (cookie.get("role") === "Owner" && (
+          {(userRole === "Admin" && user?.role === "User") ||
+            (userRole === "Owner" && (
               <Button
                 variant="outlined"
                 sx={{ width: "120px", textTransform: "none" }}

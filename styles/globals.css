@@ -33,3 +33,7 @@ nav.MuiPagination-root {
 nav ul.MuiPagination-ul {
   justify-content: flex-end;
 }
+.alert {
+  color: #6c757d;
+  background-color: #dddfe2;
+}

@@ -84,13 +84,8 @@ const CardXS = ({ contacts, isSelected, handleClick, handleFavorite }) => {
                       </Link>
                       <Alert
                         icon={false}
-                        severity={
-                          contact.status === "Active"
-                            ? "success"
-                            : user.status === "Inactive"
-                            ? "warning"
-                            : "cyan"
-                        }
+                        className={contact.status === "Inactive" && "alert"}
+                        severity={contact.status === "Active" ? "success" : ""}
                       >
                         {contact.status}
                       </Alert>

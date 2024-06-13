@@ -47,7 +47,6 @@ export default function Home() {
     queryKey: ["contacts"],
     queryFn: fetchContacts,
   });
-  const latestFourContacts = contacts ? contacts.slice(-4) : [];
 
   const [activeContacts, setActiveContacts] = useState([]);
   const [inactiveContacts, setInactiveContacts] = useState([]);
@@ -56,9 +55,9 @@ export default function Home() {
 
   useEffect(() => {
     if (contacts) {
-      const active = contacts.filter((contact) => contact.status === "active");
+      const active = contacts.filter((contact) => contact.status === "Active");
       const inactive = contacts.filter(
-        (contact) => contact.status === "inactive"
+        (contact) => contact.status === "Inactive"
       );
       const withEmail = contacts.filter((contact) => contact.email);
       const withoutEmail = contacts.filter((contact) => !contact.email);
