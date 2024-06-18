@@ -23,7 +23,7 @@ import Error from "../components/Error";
 const FormLogin = () => {
   const [form, setForm] = useState({
     email: "asaad99hayani@gmail.com",
-    password: "12345678",
+    password: "12341234",
   });
   const [errorEmail, setErrorEmail] = useState(false);
   const router = useRouter();
